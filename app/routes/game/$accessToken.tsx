@@ -53,7 +53,13 @@ function mapAlbums(searchResults: any[]) {
 
 export async function loader({params}: LoaderArgs): Promise<Album>{
   let album: Promise<Album> = loadRandomAlbum(params.accessToken);
-
+  let test = await fetch(`https://api.spotify.com/v1/playlists/4KmcBdDIbHeO0alvCfk2TC?&limit=100`, {
+    headers: {
+      "Authorization": `Bearer ${params.accessToken}`,
+      "Content-Type": "application/json"
+    }
+  }).then(res => res.json())
+  console.log(test)
   return album;
 }
 
@@ -102,7 +108,6 @@ export default function GameRoute() {
       <CardFooter>
         <Form>
           <Input />
-          <Input name="guessNumber" value={guess} hidden/>
           <Button type="submit"></Button>
         </Form>
       </CardFooter>

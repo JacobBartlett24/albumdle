@@ -3,6 +3,7 @@ import type { ActionArgs } from '@remix-run/node';
 import { Form, Link } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
+import { getSession, commitSession } from "../session";
 
 export async function action({ request }: ActionArgs) {
   var authOptions = {
@@ -22,8 +23,7 @@ export async function action({ request }: ActionArgs) {
     headers: authOptions.headers,
   }).then(res => res.json());
 
-  console.log(response.access_token)
-  return redirect('/game');  
+  return redirect(`/game/${response.access_token}`);  
 }
 
 export default function Index() {

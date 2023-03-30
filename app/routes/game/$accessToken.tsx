@@ -1,5 +1,7 @@
-import { Card, CardBody, CardFooter, CardHeader } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Stack, Text } from "@chakra-ui/react";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
+import { useState } from "react";
 import { useLoaderData } from "react-router";
 
 type Album = {
@@ -55,18 +57,54 @@ export async function loader({params}: LoaderArgs): Promise<Album>{
   return album;
 }
 
+export async function action({request}: ActionArgs){
+  let formData = await request.formData();
+  let guess: number = formData.get("guessNumber");
+  guess = guess + 1;
+  return {
+    json: { guess }
+  }
+}
+
 export default function GameRoute() {
-  let album: Album = useLoaderData();
+  //let album: Album = useLoaderData();
+  let data = useActionData()
+
+  let guess: number = 0;
+  console.log(guess)
 
   return(
-    <Card>
+    <Card w={"500px"} h={"600px"}>
       <CardHeader>
-
       </CardHeader>
       <CardBody>
+        <Stack spacing={3}>
+          <Text>1</Text>
+        </Stack>
+        <Divider />
+        <Stack spacing={3}>
+          <Text>2</Text>
+        </Stack>
+        <Divider />
+        <Stack>
+          <Text>3</Text>
+        </Stack>
+        <Divider />
+        <Stack>
+          <Text>4</Text>
+        </Stack>
+        <Divider />
+        <Stack>
+          <Text>5</Text>
+        </Stack>
+        <Divider />    
       </CardBody>
       <CardFooter>
-        
+        <Form>
+          <Input />
+          <Input name="guessNumber" value={guess} hidden/>
+          <Button type="submit"></Button>
+        </Form>
       </CardFooter>
     </Card>
   )

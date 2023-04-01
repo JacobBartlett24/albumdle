@@ -8,15 +8,16 @@ datasource db {
 }
 
 model TopAlbumsGeneral {
-  id           Int     @id
-  created_at   String? @db.VarChar
-  name         String? @default("") @db.VarChar
-  type         String? @default("") @db.VarChar
+  id           Int      @id @default(autoincrement())
+  created_at   String?  @db.VarChar
+  name         String?  @default("") @db.VarChar
+  type         String?  @default("") @db.VarChar
   total_tracks Int?
-  release_date String? @db.VarChar
-  genres       Json?   @db.Json
-  artists      Json?   @db.Json
+  release_date String?  @db.VarChar
+  genres       Json?    @db.Json
+  artists      Json?    @db.Json
   popularity   Int?
-  albumId      String? @default("") @db.VarChar
-  href         String? @default("") @db.VarChar
+  href         String?  @default("") @db.VarChar
+  albumId      String?  @default("") @db.VarChar
+  tracks       String[] @db.VarChar
 }

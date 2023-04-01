@@ -17,4 +17,6 @@ model TopAlbumsGeneral {
   genres       Json?   @db.Json
   artists      Json?   @db.Json
   popularity   Int?
+  albumId      String? @default("") @db.VarChar
+  href         String? @default("") @db.VarChar
 }

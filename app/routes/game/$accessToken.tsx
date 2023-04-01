@@ -9,7 +9,6 @@ type Album = {
   type: string;
   total_tracks: number;
   release_date: string;
-  release_date_precision: string;
   genres: Array<string>;
   artists: Array<Artist>;
   popularity: number;
@@ -29,10 +28,57 @@ async function loadRandomAlbum(){
   return randomVinyl;
 }
 
-export async function loader({params}: LoaderArgs): Promise<TopAlbumsGeneral>{
+function myFunc(arg: any) {
+  console.log(`arg was => ${arg}`);
+}
+
+export async function loader({params}: LoaderArgs){
   let album: TopAlbumsGeneral = await loadRandomAlbum();
+  let err: boolean = false;
+  let offset: number = 0;
+
+  while(!err || offset == 500){
+    let res = await fetch(`https://api.spotify.com/v1/playlists/4KmcBdDIbHeO0alvCfk2TC?offset=${offset}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${params.accessToken}`,
+      },
+    }).then(res => res.json());
+
+    offset = offset + 100;
+
+    
+    
+    res.tracks.items.forEach(async (albumTrack: any) => {
+      let url = albumTrack.track.album.href;
+
+      let albumInfo = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${params.accessToken}`,
+        }
+      }).then(res => res.json())
+      db.topAlbumsGeneral.create({
+        data: {
+          name: albumInfo.name,
+          type: albumInfo.type,
+          total_tracks: albumInfo.total_tracks,
+          release_date: albumInfo.release_date,
+          genres: albumInfo.genres,
+          artists: albumInfo.artists,
+          popularity: albumInfo.popularity,
+          albumId: albumInfo.id,
+          href: albumInfo.href,
+        } 
+      })
+    })
+    console.log(offset)    
+  }
 
   return album;
+
 }
 
 export async function action({request}: ActionArgs){

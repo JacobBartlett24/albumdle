@@ -17,25 +17,27 @@ async function loadRandomAlbum(){
 }
 
 
-export async function loader({params}: LoaderArgs){
+export async function loader({request}: LoaderArgs){
   let album: TopAlbumsGeneral = await loadRandomAlbum();
-  
-  return album;
+  const url = new URL(request.url);
+  const guessValue = url.searchParams.getAll("guessValue");
+  const guessNumber = url.searchParams.getAll("guessNumber");
+  return json({album: album, guessValue: guessValue, guessNumber: guessNumber});
 }
 
 export async function action({request}: ActionArgs){
-  const guess = (await request.formData()).get("guessValue");
   return(
-    json({message: guess, correct: true})
+    json({message: "guess", correct: true})
   )
 }
 
 export default function GameRoute() {
-  let randomAlbum: TopAlbumsGeneral = useLoaderData()
-  let guessData = useActionData<typeof action>();
+  let data = useLoaderData()
+  let randomAlbum: TopAlbumsGeneral = data.album;
+  let guessData: string = data.guessValue;
 
   const fetcher = useFetcher();
-
+  console.log(data)
   const [guess, setGuess] = useState(0);
 
   function obfuscate(albumName: string){
@@ -84,7 +86,7 @@ export default function GameRoute() {
         </VStack>
         </CardBody>
         <CardFooter>
-          <fetcher.Form method="post">
+          <fetcher.Form method="get">
             <input type="hidden" name="guessNumber" value="0" />
             <Box display={"flex"} flexDir={"row"}>
               <Input type="search" name="guessValue"/>

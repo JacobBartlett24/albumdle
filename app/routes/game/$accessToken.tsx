@@ -16,13 +16,28 @@ async function loadRandomAlbum(){
   return randomVinyl;
 }
 
+async function getAlbumName(randomAlbumId: number){
+  const album = await db.topAlbumsGeneral.findUnique({
+    where: {
+      id: randomAlbumId,
+    },
+  });
+  return album!.name;
+}
 
 export async function loader({request}: LoaderArgs){
   let album: TopAlbumsGeneral = await loadRandomAlbum();
   const url = new URL(request.url);
-  const guessValue = url.searchParams.getAll("guessValue");
-  const guessNumber = url.searchParams.getAll("guessNumber");
-  return json({album: album, guessValue: guessValue, guessNumber: guessNumber});
+  const guessValue: string = url.searchParams.getAll("guessValue")[0];
+  const albumId: number = +url.searchParams.getAll("albumId")[0];
+  if(albumId){
+    const albumName = await getAlbumName(albumId);
+    if(albumName === guessValue){
+      return json({result: true, album: album, guessValue: guessValue});
+    }
+  }
+  //const guessNumber = +url.searchParams.getAll("guessNumber")[0] + 1;
+  return json({result: false, album: album, guessValue: guessValue});
 }
 
 export async function action({request}: ActionArgs){
@@ -33,11 +48,11 @@ export async function action({request}: ActionArgs){
 
 export default function GameRoute() {
   let data = useLoaderData()
-  let randomAlbum: TopAlbumsGeneral = data.album;
-  let guessData: string = data.guessValue;
-
   const fetcher = useFetcher();
-  console.log(data)
+
+  let randomAlbum: TopAlbumsGeneral = data.album;
+
+  const [guessNumber, setGuessNumber] = useState(0); 
   const [guess, setGuess] = useState(0);
 
   function obfuscate(albumName: string){
@@ -86,11 +101,13 @@ export default function GameRoute() {
         </VStack>
         </CardBody>
         <CardFooter>
+          {guessNumber}
           <fetcher.Form method="get">
-            <input type="hidden" name="guessNumber" value="0" />
+            <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box display={"flex"} flexDir={"row"}>
-              <Input type="search" name="guessValue"/>
-              <Button type="submit">Guess</Button>
+              <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
+              <Input type="search" name="guessValue" required/>
+              <Button type="submit" onClick={() => setGuessNumber(guess + 1)}>Guess</Button>
             </Box>
           </fetcher.Form>
         </CardFooter>

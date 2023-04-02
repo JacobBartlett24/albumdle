@@ -83,20 +83,20 @@ export default function GameRoute() {
           spacing={4}
           align='stretch'
         >
-          <Box h='40px'>
-            First Track: {randomAlbum.tracks[0]}
+          <Box h='40px' >
+            First Track: <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
           <Box h='40px'>
-            Release Date: {randomAlbum.release_date}
+            Release Date: <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
           </Box>
           <Box h='40px'>
-            Second Track: {randomAlbum.tracks[1]}
+            Second Track: <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
           </Box>
           <Box h='40px'>
-            Recent Popularity (0-100): {randomAlbum.popularity}
+            Recent Popularity (0-100): <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
           </Box>
           <Box h='40px'>
-            Artist: {randomAlbum.artists[0].name}
+            Artist: <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
           </Box>
         </VStack>
         </CardBody>
@@ -106,8 +106,8 @@ export default function GameRoute() {
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
-              <Input type="search" name="guessValue" required/>
-              <Button type="submit" onClick={() => setGuessNumber(guess + 1)}>Guess</Button>
+              <Input type="search" name="guessValue" hidden={guessNumber == 6}required/>
+              <Button type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>Guess</Button>
             </Box>
           </fetcher.Form>
         </CardFooter>

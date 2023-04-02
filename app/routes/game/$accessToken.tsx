@@ -1,10 +1,11 @@
 import { json } from "@remix-run/node";
 import type {ActionArgs, LoaderArgs} from "@remix-run/node";
-import { useActionData, useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral} from "@prisma/client";
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -31,13 +32,22 @@ export async function loader({request}: LoaderArgs){
   const guessValue: string = url.searchParams.getAll("guessValue")[0];
   const albumId: number = +url.searchParams.getAll("albumId")[0];
   if(albumId){
-    const albumName = await getAlbumName(albumId);
-    if(albumName === guessValue){
-      return json({result: true, album: album, guessValue: guessValue});
-    }
+    const albumName = await getAlbumName(albumId); 
   }
-  //const guessNumber = +url.searchParams.getAll("guessNumber")[0] + 1;
+
   return json({result: false, album: album, guessValue: guessValue});
+}
+
+export async function createSearchResults(){
+  const supabase = createSupaBaseConnection();
+  const { data, error } = await supabase.from('books').select().eq('title', 'Harry')
+}
+
+export function createSupaBaseConnection() {
+  return createClient(
+    "https://svbajrscixbgfocqqlyq.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2YmFqcnNjaXhiZ2ZvY3FxbHlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAxODcxMzMsImV4cCI6MTk5NTc2MzEzM30.8L9E9yrzSMc85aa_8QT55vt0-WGFAiHwuUhMFchuhjQ"
+  );
 }
 
 export async function action({request}: ActionArgs){
@@ -53,7 +63,13 @@ export default function GameRoute() {
   let randomAlbum: TopAlbumsGeneral = data.album;
 
   const [guessNumber, setGuessNumber] = useState(0); 
-  const [guess, setGuess] = useState(0);
+  const [guess, setGuess] = useState("");
+
+  async function handleChange(e: any){
+    setGuess(e.target.value)
+    createSearchResults();
+  }
+
 
   function obfuscate(albumName: string){
     let obfuscatedAlbumName: string = "";
@@ -101,12 +117,11 @@ export default function GameRoute() {
         </VStack>
         </CardBody>
         <CardFooter>
-          {guessNumber}
           <fetcher.Form method="get">
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
-              <Input type="search" name="guessValue" hidden={guessNumber == 6}required/>
+              <Input type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
               <Button type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>Guess</Button>
             </Box>
           </fetcher.Form>

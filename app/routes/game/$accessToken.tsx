@@ -6,6 +6,7 @@ import type { TopAlbumsGeneral} from "@prisma/client";
 import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, List, ListItem, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -123,16 +124,7 @@ export default function GameRoute() {
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
               <Box display={"flex"} flexDir={"column"}>
                 <Input w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
-                <List bg={"white"} spacing={3}>
-                  {albumList.length > 0 ? albumList.map((album, i) => (
-                      i += 1,
-                      i <= 9 ?
-                      <ListItem onClick={() => setGuess(album.name)} key={album.id} color={"black"}>
-                        {album.name}
-                      </ListItem>
-                      : null
-                    )): null}
-                </List>
+                <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>
               </Box>
               <Button type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>Guess</Button>
             </Box>

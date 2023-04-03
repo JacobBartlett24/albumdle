@@ -3,7 +3,7 @@ import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral} from "@prisma/client";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, List, ListItem, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -29,19 +29,15 @@ async function getAlbumName(randomAlbumId: number){
 export async function loader({request}: LoaderArgs){
   let album: TopAlbumsGeneral = await loadRandomAlbum();
   const url = new URL(request.url);
-  const guessValue: string = url.searchParams.getAll("guessValue")[0];
-  const albumId: number = +url.searchParams.getAll("albumId")[0];
+  const guessValue: string = url.searchParams.get("guessValue")!;
+  const albumId: number = +url.searchParams.get("albumId")!;
   if(albumId){
     const albumName = await getAlbumName(albumId); 
   }
-
   return json({result: false, album: album, guessValue: guessValue});
 }
 
-export async function createSearchResults(){
-  const supabase = createSupaBaseConnection();
-  const { data, error } = await supabase.from('books').select().eq('title', 'Harry')
-}
+
 
 export function createSupaBaseConnection() {
   return createClient(
@@ -61,15 +57,19 @@ export default function GameRoute() {
   const fetcher = useFetcher();
 
   let randomAlbum: TopAlbumsGeneral = data.album;
-
+  
+  const [albumList, setAlbumList] = useState<TopAlbumsGeneral[]>([]);
   const [guessNumber, setGuessNumber] = useState(0); 
-  const [guess, setGuess] = useState("");
+  const [guess, setGuess] = useState<string>("");
 
   async function handleChange(e: any){
     setGuess(e.target.value)
-    createSearchResults();
-  }
+    let response = await fetch("/api/searchRecommendations?q=" + guess)
+    .then(res => res.json())
 
+    setAlbumList(response);
+
+  }
 
   function obfuscate(albumName: string){
     let obfuscatedAlbumName: string = "";
@@ -88,7 +88,7 @@ export default function GameRoute() {
   return(
     <Box>
       <Heading>Guess The Album Daily</Heading>
-      <Card>
+      <Card h={"40rem"} w={"30rem"}overflow={"visible"}>
         <CardHeader>
           <Text>Title:</Text>
           <Text>{obfuscate(randomAlbum.name!)}</Text>
@@ -121,7 +121,19 @@ export default function GameRoute() {
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
-              <Input type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
+              <Box display={"flex"} flexDir={"column"}>
+                <Input w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
+                <List bg={"white"} spacing={3}>
+                  {albumList.length > 0 ? albumList.map((album, i) => (
+                      i += 1,
+                      i <= 9 ?
+                      <ListItem onClick={() => setGuess(album.name)} key={album.id} color={"black"}>
+                        {album.name}
+                      </ListItem>
+                      : null
+                    )): null}
+                </List>
+              </Box>
               <Button type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>Guess</Button>
             </Box>
           </fetcher.Form>

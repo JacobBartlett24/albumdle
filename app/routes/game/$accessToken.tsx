@@ -3,7 +3,7 @@ import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral} from "@prisma/client";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, List, ListItem, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, Spinner, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
@@ -38,8 +38,6 @@ export async function loader({request}: LoaderArgs){
   return json({result: false, album: album, guessValue: guessValue});
 }
 
-
-
 export function createSupaBaseConnection() {
   return createClient(
     "https://svbajrscixbgfocqqlyq.supabase.co",
@@ -69,7 +67,6 @@ export default function GameRoute() {
     .then(res => res.json())
 
     setAlbumList(response);
-
   }
 
   function obfuscate(albumName: string){
@@ -86,12 +83,16 @@ export default function GameRoute() {
     return obfuscatedAlbumName;
   }
 
+  let submissionState = fetcher.state === "idle" ? "Guess" :
+                        fetcher.state === "loading" ? <Spinner /> :
+                        fetcher.state === "submitting" ? <Spinner /> :
+                        "Guess"
+
   return(
-    <Box>
-      <Heading>Guess The Album Daily</Heading>
-      <Card h={"40rem"} w={"30rem"}overflow={"visible"}>
-        <CardHeader>
-          <Text>Title:</Text>
+    <Box >
+      <Heading align={"center"}>Guess The Album Daily</Heading>
+      <Card h={"40rem"} w={"60rem"}overflow={"visible"}>
+        <CardHeader align={"center"}>
           <Text>{obfuscate(randomAlbum.name!)}</Text>
         </CardHeader>
         <CardBody>
@@ -100,33 +101,33 @@ export default function GameRoute() {
           spacing={4}
           align='stretch'
         >
-          <Box h='40px' >
+          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             First Track: <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
-          <Box h='40px'>
+          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             Release Date: <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
           </Box>
-          <Box h='40px'>
+          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             Second Track: <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
           </Box>
-          <Box h='40px'>
+          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             Recent Popularity (0-100): <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
           </Box>
-          <Box h='40px'>
+          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             Artist: <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
           </Box>
         </VStack>
         </CardBody>
-        <CardFooter>
+        <CardFooter display={"flex"} justifyContent={"center"}>
           <fetcher.Form method="get">
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
               <Box display={"flex"} flexDir={"column"}>
                 <Input w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
-                <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>
+                {guess == "" ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
-              <Button type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>Guess</Button>
+              <Button isDisabled={guess === ""} type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>{submissionState}</Button>
             </Box>
           </fetcher.Form>
         </CardFooter>

@@ -1,19 +1,24 @@
-import { Box, Button, Card, CardBody, Input } from "@chakra-ui/react"
+import { Box, Button, Card, CardBody, Input, space } from "@chakra-ui/react"
 import type { ActionArgs} from "@remix-run/node"
 import { redirect} from "@remix-run/node"
 import { Form } from "@remix-run/react"
 import { supabase } from "~/utils/supabase.server"
 
-export async function action({request} : ActionArgs){      
+export async function action({request} : ActionArgs){
+  const formData = await request.formData()
+  const email = formData.get("email")!.toString()
+  const password = formData.get("password")!.toString()
+
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: 'exampless@email.com',
-    password: 'example-password',
+    email: email,
+    password: password,
   })
 
-  console.log(`data: ${data.user}`)
-  console.log(`error: ${error}`)
-
-  return redirect("/game/123123")
+  if(error){
+    return redirect("/login")
+  }else if(data){
+    return redirect("/game/123123")
+  }
 }
 
 export default function Login(){
@@ -23,10 +28,10 @@ export default function Login(){
         <CardBody>
           <Form method="post">
             <label>Email</label>
-            <Input type="email" name="email" />
+            <Input type="email" name="email" required/>
             <label>Password</label>
-            <Input type="password" name="password" />
-            <Button type={"submit"}>Signup</Button>
+            <Input type="password" name="password" required/>
+            <Button type={"submit"}>Login</Button>
           </Form>
         </CardBody>
       </Card>

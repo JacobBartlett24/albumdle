@@ -121,11 +121,12 @@ export default function GameRoute() {
                 <Input w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
                 {guess == "" ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
-              <Button isDisabled={guess === ""} type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>{submissionState}</Button>
+              <Button isDisabled={guess === ""} hidden={guessNumber == 6} type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>{submissionState}</Button>
+              <Text hidden={guessNumber != 6}>You Suck!</Text>
             </Box>
           </fetcher.Form>
         </CardFooter>
       </Card>
     </Box>
   )
-}
+} 

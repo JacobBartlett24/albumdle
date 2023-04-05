@@ -1,29 +1,34 @@
-import { Box, Text, Card, CardHeader, CardBody, CardFooter, Button, Heading } from '@chakra-ui/react';
+import { Box, Text, Card, CardHeader, CardFooter, Button } from '@chakra-ui/react';
 import type { ActionArgs } from '@remix-run/node';
-import { Form, Link } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
-import { getSession, commitSession } from "../session";
 
 export async function action({ request }: ActionArgs) {
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token?grant_type=client_credentials',
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')),
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    form:{
-      'grant_type': 'client_credentials'
-    },
-    json: true
-  };
+  const formData = await request.formData();
+  const intent = formData.get('intent');
+  if(intent === 'guest'){
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token?grant_type=client_credentials',
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')),
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form:{
+        'grant_type': 'client_credentials'
+      },
+      json: true
+    };
 
-  var response = await fetch(authOptions.url, {
-    method: 'POST',
-    headers: authOptions.headers,
-  }).then(res => res.json());
+    var response = await fetch(authOptions.url, {
+      method: 'POST',
+      headers: authOptions.headers,
+    }).then(res => res.json());
 
-  return redirect(`/game/${response.access_token}`);  
+    return redirect(`/game/${response.access_token}`);
+  }else if(intent === 'signup'){
+    return redirect('/signup');
+  }  
 }
 
 export default function Index() {
@@ -39,11 +44,11 @@ export default function Index() {
           <Form method="post">
               <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
                 <Box>
-                  <Button mr={".3rem"}>Signup</Button>
-                  <Button ml={".3rem"}>Login</Button>
+                  <Button name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
+                  <Button name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
                 </Box>
                 <Box>
-                  <Button type={"submit"} mt={"1rem"}>Continue As Guest</Button>
+                  <Button name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
                 </Box>
               </Box>
           </Form>

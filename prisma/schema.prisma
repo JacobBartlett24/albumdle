@@ -21,3 +21,9 @@ model TopAlbumsGeneral {
   albumId      String?   @default("") @db.VarChar
   tracks       String[]  @db.VarChar
 }
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}

@@ -26,6 +26,7 @@ async function getAlbumName(randomAlbumId: number){
   });
   return album!.name;
 }
+  
 
 export async function loader({request}: LoaderArgs){
   let album: TopAlbumsGeneral = await loadRandomAlbum();
@@ -36,13 +37,6 @@ export async function loader({request}: LoaderArgs){
     const albumName = await getAlbumName(albumId); 
   }
   return json({result: false, album: album, guessValue: guessValue});
-}
-
-export function createSupaBaseConnection() {
-  return createClient(
-    "https://svbajrscixbgfocqqlyq.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2YmFqcnNjaXhiZ2ZvY3FxbHlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAxODcxMzMsImV4cCI6MTk5NTc2MzEzM30.8L9E9yrzSMc85aa_8QT55vt0-WGFAiHwuUhMFchuhjQ"
-  );
 }
 
 export async function action({request}: ActionArgs){
@@ -102,7 +96,7 @@ export default function GameRoute() {
           align='stretch'
         >
           <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            First Track: <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
+            <Text>First Track:</Text><Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
           <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             Release Date: <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>

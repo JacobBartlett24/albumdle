@@ -28,7 +28,9 @@ export async function action({ request }: ActionArgs) {
     return redirect(`/game/${response.access_token}`);
   }else if(intent === 'signup'){
     return redirect('/signup');
-  }  
+  }else if(intent === 'login'){
+    return redirect('/login');
+  }    
 }
 
 export default function Index() {

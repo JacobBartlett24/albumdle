@@ -1,7 +1,7 @@
 // root.tsx
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import { withEmotionCache } from '@emotion/react'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, cookieStorageManagerSSR, extendTheme } from '@chakra-ui/react'
 import {
   Links,
   LiveReload,
@@ -9,10 +9,21 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react'
-import { MetaFunction, LinksFunction } from '@remix-run/node' // Depends on the runtime you choose
+import { MetaFunction, LinksFunction, LoaderFunction, LoaderArgs } from '@remix-run/node' // Depends on the runtime you choose
 
 import { ServerStyleContext, ClientStyleContext } from './context'
+
+
+
+// Typescript
+// This will return cookies
+export const loader: LoaderFunction = async ({ request }: LoaderArgs) => {
+  // first time users will not have any cookies and you may not return
+  // undefined here, hence ?? is necessary
+  return request.headers.get('cookie') ?? ''
+}
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -30,6 +41,33 @@ export let links: LinksFunction = () => {
     },
   ]
 }
+
+const theme = extendTheme({
+  colors: { 
+    brandred: {
+      900: '#ff0d47',
+      800: '#153e75',
+      700: '#2a69ac',
+    },
+    brandyellow: {
+      900: '#f2f28d',
+      800: '#153e75',
+      700: '#2a69ac',
+    },
+    brandgreen: {
+      900: '#5ef10d',
+      800: '#153e75',
+      700: '#2a69ac',
+    },
+    brandwhite: {
+      900: '#FAF8F6',
+      800: '#153e75',
+      700: '#2a69ac',
+    },
+  },
+  fonts: {
+  },
+})
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -54,36 +92,88 @@ const Document = withEmotionCache(
       clientStyleData?.reset();
     }, []);
 
-    return (
-      <html lang="en">
-        <head>
-          <Meta />
-          <Links />
-          {serverStyleData?.map(({ key, ids, css }) => (
-            <style
-              key={key}
-              data-emotion={`${key} ${ids.join(' ')}`}
-              dangerouslySetInnerHTML={{ __html: css }}
-            />
-          ))}
-        </head>
-        <body>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </body>
-      </html>
-    );
+
+  function getColorMode (cookies: string) {
+    const match = cookies.match(new RegExp(`(^| )${CHAKRA_COOKIE_COLOR_KEY}=([^;]+)`));
+    return match == null ? void 0 : match[2];
+  }
+
+  // here we can set the default color mode. If we set it to null,
+  // there's no way for us to know what is the the user's preferred theme
+  // so the cient will have to figure out and maybe there'll be a flash the first time the user visits us.
+  const DEFAULT_COLOR_MODE: "dark" | "light" | null = 'light';
+
+  const CHAKRA_COOKIE_COLOR_KEY = "chakra-ui-color-mode";
+
+  let cookies = useLoaderData()
+
+  // the client get the cookies from the document 
+  // because when we do a client routing, the loader can have stored an outdated value
+  if (typeof document !== "undefined") {
+    cookies = document.cookie;
+  }
+
+  // get and store the color mode from the cookies.
+  // It'll update the cookies if there isn't any and we have set a default value
+  let colorMode = useMemo(() => {
+    let color = getColorMode(cookies)
+
+    if (!color && DEFAULT_COLOR_MODE) {
+      cookies += ` ${CHAKRA_COOKIE_COLOR_KEY}=${DEFAULT_COLOR_MODE}`;
+      color = DEFAULT_COLOR_MODE;
+    }
+
+    return color
+  }, [cookies]);
+
+  return (
+    <html
+    lang="en"
+    {...colorMode
+      && {
+          "data-theme": colorMode,
+          "style": { colorScheme: colorMode },
+        }
+      }
+  >
+    <head>
+      <Meta />
+      <Links />
+      {serverStyleData?.map(({ key, ids, css }) => (
+        <style
+          key={key}
+          data-emotion={`${key} ${ids.join(" ")}`}
+          dangerouslySetInnerHTML={{ __html: css }}
+        />
+      ))}
+    </head>
+    <body  
+      {...colorMode && {
+        className: `chakra-ui-${colorMode}`
+      }}
+    >
+      <ChakraProvider
+        colorModeManager={cookieStorageManagerSSR(cookies)}
+        theme={theme}
+      >
+        {children}
+      </ChakraProvider>
+
+      <ScrollRestoration />
+
+      <Scripts />
+
+      <LiveReload />
+    </body>
+  </html>
+  );
   }
 );
 
 export default function App() {
   return (
     <Document>
-      <ChakraProvider>
         <Outlet />
-      </ChakraProvider>
     </Document>
   )
 }

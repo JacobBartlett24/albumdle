@@ -38,19 +38,19 @@ export default function Index() {
     
     <Box display={"flex"} flexDir={"column"} alignItems={"center"}>
       <Header />
-      <Card w={"300px"} marginTop={"20rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"}>
+      <Card w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>
-          <Text fontSize={"2rem"}>Login</Text>
+          <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>
         </CardHeader>
         <CardFooter>
           <Form method="post">
               <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
                 <Box>
-                  <Button name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
-                  <Button name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
+                  <Button color={"black"} bg={"brandgreen.900"}name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
+                  <Button color={"black"} bg={"brandgreen.900"}name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
                 </Box>
                 <Box>
-                  <Button name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
+                  <Button color={"black"} bg={"brandgreen.900"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
                 </Box>
               </Box>
           </Form>

@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardBody, Input } from "@chakra-ui/react";
 import type { ActionArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { redirect, json } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
 import { supabase } from "~/utils/supabase.server";
 
 export async function action({request} : ActionArgs){      
@@ -16,13 +16,14 @@ export async function action({request} : ActionArgs){
 
   if(error){
     console.log(error)
-    return redirect("/signup")
+    return json({error: error})
   }else if(data){
     return redirect("/game/123123")
   }
 }
 
 export default function SignupRoute() {
+  let error = useActionData()
   return(
     <Box>
       <Card>
@@ -32,6 +33,7 @@ export default function SignupRoute() {
             <Input type="email" name="email" required/>
             <label>Password</label>
             <Input type="password" name="password" required/>
+            {error}
             <Button type={"submit"}>Signup</Button>
           </Form>
         </CardBody>

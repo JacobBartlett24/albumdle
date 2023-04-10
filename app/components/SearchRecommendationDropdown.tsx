@@ -10,7 +10,7 @@ type Props = {
 export default function SearchRecommendationDropdown({albumList, setGuess, guessNumber}: Props){
   return(
     <>
-      <List overflowY={"scroll"} w={"23rem"} top={"41.5rem"} borderRadius={"xl"} bg={"blackAlpha.400"} opacity={"100%"} position={"fixed"} spacing={0} hidden={guessNumber == 6}>
+      <List overflowY={"scroll"} w={"23rem"} top={"42.5rem"} borderRadius={"xl"} bg={"blackAlpha.400"} opacity={"100%"} position={"fixed"} spacing={0} hidden={guessNumber == 6}>
         {albumList.length > 0 ? albumList.map((album, i) => (
             i += 1,
             i <= 7 ?

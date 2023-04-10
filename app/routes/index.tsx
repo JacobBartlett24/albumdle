@@ -3,6 +3,8 @@ import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
+import { BsMoonStarsFill } from 'react-icons/bs';
+
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
@@ -37,7 +39,7 @@ export default function Index() {
   return (
     
     <Box display={"flex"} flexDir={"column"} alignItems={"center"}>
-      <Header />
+      <Header title='Albumdle' leftIcon={BsMoonStarsFill} rightIcon={BsMoonStarsFill}/>
       <Card w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>
           <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>

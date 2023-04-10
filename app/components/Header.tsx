@@ -1,14 +1,23 @@
-import { Box, Button, Heading, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Heading, Icon, useColorMode } from "@chakra-ui/react";
+import { BsMoonStarsFill } from "react-icons/bs";
 
-export default function Header(){
+type props = {
+  title: string,
+  leftIcon: any,
+  rightIcon: any,
+}
+
+export default function Header({title, leftIcon, rightIcon}: props){
   const { colorMode, toggleColorMode } = useColorMode()
   return (
-    <Box display={"flex"} flexDir={"row"} justifyContent={"space-between"} alignItems={"center"} h={"60px"} w={"100%"}>
-      <Button onClick={toggleColorMode} >Toggle {colorMode === 'light' ? 'Dark' : 'Light'}</Button>
+    <Box p={"0 20px"}display={"flex"} flexDir={"row"} justifyContent={"space-between"} alignItems={"center"} h={"60px"} w={"100%"}>
+      <Icon boxSize={6} as={leftIcon} onClick={toggleColorMode} _hover={{cursor: "pointer"}}/>
+        {/* {colorMode === 'light' ? 'Dark' : 'Light'} */}
       <Heading as="h1" size="xl" color="black" fontWeight="bold" textAlign="center">
-        Albumdle
+        {title}
       </Heading>
-      <Button onClick={toggleColorMode}>Toggle {colorMode === 'light' ? 'Dark' : 'Light'}</Button>
+      <Icon boxSize={6} as={rightIcon} _hover={{cursor: "pointer"}}/>
+      {/* Toggle {colorMode === 'light' ? 'Dark' : 'Light'} */}
     </Box>
   );
 }

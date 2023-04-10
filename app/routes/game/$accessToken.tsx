@@ -7,6 +7,8 @@ import { Box, Button, Card, CardBody, CardFooter, CardHeader, FormLabel, Heading
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
+import Header from "~/components/Header";
+import { BsMoonStarsFill } from "react-icons/bs";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -84,7 +86,7 @@ export default function GameRoute() {
 
   return(
     <Box >
-      <Heading align={"center"}>Guess The Album Daily</Heading>
+      <Header title="Guess The Album" leftIcon={BsMoonStarsFill}/>
       <Card bg={"brandwhite.900"} h={"40rem"} w={"60rem"}overflow={"visible"}>
         <CardHeader align={"center"}>
           <Text>{obfuscate(randomAlbum.name!)}</Text>

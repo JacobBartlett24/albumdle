@@ -33,7 +33,7 @@ export default function SignupRoute() {
             <Input type="email" name="email" required/>
             <label>Password</label>
             <Input type="password" name="password" required/>
-            {error}
+            
             <Button type={"submit"}>Signup</Button>
           </Form>
         </CardBody>

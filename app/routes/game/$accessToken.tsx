@@ -3,7 +3,7 @@ import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral} from "@prisma/client";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Heading, Input, Spinner, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, FormLabel, Heading, Input, Spinner, StackDivider, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
@@ -85,7 +85,7 @@ export default function GameRoute() {
   return(
     <Box >
       <Heading align={"center"}>Guess The Album Daily</Heading>
-      <Card h={"40rem"} w={"60rem"}overflow={"visible"}>
+      <Card bg={"brandwhite.900"} h={"40rem"} w={"60rem"}overflow={"visible"}>
         <CardHeader align={"center"}>
           <Text>{obfuscate(randomAlbum.name!)}</Text>
         </CardHeader>
@@ -95,20 +95,20 @@ export default function GameRoute() {
           spacing={4}
           align='stretch'
         >
-          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <Text>First Track:</Text><Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
+          <Box h={"3rem"} bg={"blackAlpha.400"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel>First Track:</FormLabel> <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
-          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            Release Date: <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
+          <Box h={"3rem"} bg={"blackAlpha.400"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel>Release Date:</FormLabel> <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
           </Box>
-          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            Second Track: <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
+          <Box h={"3rem"} bg={"blackAlpha.400"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel>Second Track:</FormLabel> <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
           </Box>
-          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            Recent Popularity (0-100): <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
+          <Box h={"3rem"} bg={"blackAlpha.400"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel>Recent Popularity (0-100):</FormLabel> <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
           </Box>
-          <Box h={"3rem"} bg={"blackAlpha.700"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            Artist: <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
+          <Box h={"3rem"} bg={"blackAlpha.400"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel>Artist:</FormLabel> <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
           </Box>
         </VStack>
         </CardBody>
@@ -118,10 +118,10 @@ export default function GameRoute() {
             <Box display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.id} hidden/>
               <Box display={"flex"} flexDir={"column"}>
-                <Input w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
+                <Input bg={"blackAlpha.400"} w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6} required/>
                 {guess == "" ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
-              <Button isDisabled={guess === ""} hidden={guessNumber == 6} type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>{submissionState}</Button>
+              <Button color={"black"} bg={"blackAlpha.400"} isDisabled={guess === ""} hidden={guessNumber == 6} type="submit" onClick={() => setGuessNumber(guessNumber + 1)}>{submissionState}</Button>
               <Text hidden={guessNumber != 6}>You Suck!</Text>
             </Box>
           </fetcher.Form>

@@ -5,17 +5,15 @@ import { db } from "~/utils/db.server";
 import { createClient } from "@supabase/supabase-js";
 import { supabase } from "~/utils/supabase.server"
 
-export async function createSearchResults(guess){
+export async function createSearchResults(guess: string){
   const { data, error } = await supabase.from('TopAlbumsGeneral').select().like('name', `%${guess}%`).limit(10)
-  console.log(error)
-  console.log(data)
   return(data)
 }
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   return json(
-    await createSearchResults(url.searchParams.get("q"))
+    await createSearchResults(url.searchParams.get("q")!)
   );
 }
 

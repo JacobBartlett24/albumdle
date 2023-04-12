@@ -8,22 +8,30 @@ datasource db {
 }
 
 model TopAlbumsGeneral {
-  id           Int       @id
-  created_at   DateTime? @default(now()) @db.Timestamptz(6)
-  name         String?   @default("") @db.VarChar
-  type         String?   @default("") @db.VarChar
-  total_tracks Int?
-  release_date String?   @default("") @db.VarChar
-  genres       Json?     @db.Json
-  artists      Json?     @db.Json
-  popularity   Int?
-  href         String?   @default("") @db.VarChar
-  albumId      String?   @default("") @db.VarChar
-  tracks       String[]  @db.VarChar
+  id              Int         @id
+  created_at      DateTime?   @default(now()) @db.Timestamptz(6)
+  name            String?     @default("") @db.VarChar
+  type            String?     @default("") @db.VarChar
+  total_tracks    Int?
+  release_date    String?     @default("") @db.VarChar
+  genres          Json?       @db.Json
+  artists         Json?       @db.Json
+  popularity      Int?
+  href            String?     @default("") @db.VarChar
+  albumId         String?     @unique @default("") @db.VarChar
+  tracks          String[]    @db.VarChar
+  name_normalized String?     @default("") @db.VarChar
+  DailyAlbum      DailyAlbum?
 }
 
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+}
+
+model DailyAlbum {
+  id         Int              @id @default(autoincrement())
+  albumId    String           @unique
+  dailyAlbum TopAlbumsGeneral @relation(fields: [albumId], references: [albumId])
 }

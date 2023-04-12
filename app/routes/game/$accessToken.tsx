@@ -121,7 +121,13 @@ export default function GameRoute() {
                         "Guess"
 
   return(
+    <>
+    <Header 
+        title={`Guess The Album Daily`} 
+        leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
+        rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
     <Box>
+      
         <Slide 
           direction='top' 
           in={isOpen} 
@@ -138,10 +144,7 @@ export default function GameRoute() {
             <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
           </Box>
         </Slide>
-      <Header 
-        title={`Guess the Album Daily`} 
-        leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
-        rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
+      
       <Card 
         bg={"brandwhite.900"} 
         h={"40rem"} 
@@ -198,5 +201,6 @@ export default function GameRoute() {
         </CardFooter>
       </Card>
     </Box>
+    </>
   )
 } 

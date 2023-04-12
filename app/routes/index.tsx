@@ -1,4 +1,4 @@
-import { Box, Text, Card, CardHeader, CardFooter, Button } from '@chakra-ui/react';
+import { Box, Text, Card, CardHeader, CardFooter, Button, Icon, useColorMode } from '@chakra-ui/react';
 import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
@@ -36,10 +36,11 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function Index() {
+  const {colorMode, toggleColorMode} = useColorMode()
+
   return (
-    
     <Box display={"flex"} flexDir={"column"} alignItems={"center"}>
-      <Header title='Albumdle' leftIcon={BsMoonStarsFill} rightIcon={BsMoonStarsFill}/>
+      <Header title='Albumdle' leftIcon={<Icon as={BsMoonStarsFill} boxSize={6} onClick={() => toggleColorMode()}/>} rightIcon={<Icon boxSize={6} as={BsMoonStarsFill}/>}/>
       <Card w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>
           <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>

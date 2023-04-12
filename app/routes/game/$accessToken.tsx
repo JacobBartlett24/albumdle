@@ -9,6 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
 import Header from "~/components/Header";
 import { BsMoonStarsFill } from "react-icons/bs";
+import { AiTwotoneFire } from "react-icons/ai";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -124,7 +125,6 @@ export default function GameRoute() {
           >
             
           <Box
-            w={"10rem"}
             p='40px'
             color='green'
             mt='4'
@@ -133,13 +133,13 @@ export default function GameRoute() {
             shadow='md'
             
           >
-            Correct!
+            <Text fontWeight={"extrabold"} fontSize="2rem">Correct!</Text>
           </Box>
         </Slide>
       <Header 
-        title={`${randomAlbum.name}`} 
+        title={`Guess the Album Daily`} 
         leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
-        rightIcon={<Icon transition={"width .25s"}  boxSize={6} as={BsMoonStarsFill} _hover={{cursor: "pointer", boxSize: "8"}}/>}/>
+        rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
       <Card 
         bg={"brandwhite.900"} 
         h={"40rem"} 

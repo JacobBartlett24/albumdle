@@ -2,14 +2,14 @@ import { Box, Text, Button, Card, CardBody, CardHeader, Input } from "@chakra-ui
 import type { ActionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
+import { AiFillGithub } from "react-icons/ai";
 import { supabase } from "~/utils/supabase.server";
 
 async function signInWithGitHub() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
   })
-  console.log(`data: ${data.provider}`)
-  console.log(`error: ${error}`)
+  return data
 }
 
 export async function action({request} : ActionArgs){      
@@ -17,9 +17,12 @@ export async function action({request} : ActionArgs){
   const email = formData.get("email")!.toString()
   const password = formData.get("password")!.toString()
 
+
   if(formData.get("github") === "github"){
-    signInWithGitHub()
-    return null
+    let data = await signInWithGitHub()
+    if(data.url){
+      return redirect(data.url)
+    }
   }
 
   console.log(formData.get("github"))
@@ -51,8 +54,8 @@ export default function SignupRoute() {
               <label hidden>Password</label>
               <Input placeholder="Password..." mb={"3rem"} type="password" name="password"/>
               <Button type={"submit"} w={"100%"}>Signup</Button>
-              <Text>Or</Text>
-              <Button type={"submit"} value={"github"} name="github" w={"100%"}>github</Button>
+              <Text>or</Text>
+              <Button leftIcon={<AiFillGithub />} type={"submit"} value={"github"} name="github" colorScheme={"gray"}>Github</Button>
             </Box>
           </Form>
         </CardBody>

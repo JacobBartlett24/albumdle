@@ -10,10 +10,10 @@ type props = {
 export default function Header({title, leftIcon, rightIcon}: props){
   const { colorMode, toggleColorMode } = useColorMode()
   return (
-    <Box p={"0 20px"} display={"flex"} flexDir={"row"} justifyContent={"space-between"} alignItems={"center"} h={"60px"} w={"100%"}>
+    <Box color={colorMode === "light" ? "black" : "white"} p={"0 20px"} display={"flex"} flexDir={"row"} justifyContent={"space-between"} alignItems={"center"} h={"60px"} w={"100%"}>
       {leftIcon}
         {/* {colorMode === 'light' ? 'Dark' : 'Light'} */}
-      <Heading as="h1" size="xl" color="black" fontWeight="bold" textAlign="center">
+      <Heading as="h1" size="xl" color={colorMode === "light" ? "black" : "white"} fontWeight="bold" textAlign="center">
         {title}
       </Heading>
       {rightIcon}

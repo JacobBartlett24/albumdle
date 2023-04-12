@@ -1,13 +1,29 @@
-import { Box, Button, Card, CardBody, Input, space } from "@chakra-ui/react"
+import { Box, Button, Card, CardBody, CardHeader, Icon, Input, Text } from "@chakra-ui/react"
 import type { ActionArgs} from "@remix-run/node"
 import { redirect} from "@remix-run/node"
 import { Form } from "@remix-run/react"
 import { supabase } from "~/utils/supabase.server"
+import { AiFillGithub } from "react-icons/ai"
+
+async function signInWithGitHub() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+  })
+  return data
+}
 
 export async function action({request} : ActionArgs){
   const formData = await request.formData()
   const email = formData.get("email")!.toString()
   const password = formData.get("password")!.toString()
+
+  if(formData.get("github") === "github"){
+    let data = await signInWithGitHub()
+    console.log(data.url)
+    if(data.url){
+      return redirect(data.url)
+    }
+  }
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
@@ -24,14 +40,19 @@ export async function action({request} : ActionArgs){
 export default function Login(){
   return(
     <Box>
-      <Card>
-        <CardBody>
-          <Form method="post">
-            <label>Email</label>
-            <Input type="email" name="email" required/>
-            <label>Password</label>
-            <Input type="password" name="password" required/>
-            <Button type={"submit"}>Login</Button>
+      <Card border={"1px solid black"} boxShadow={"2xl"} width={"30rem"} height={"35rem"} display={"flex"} justifyContent="center" alignItems={"center"} >
+        <CardHeader >Login</CardHeader>
+        <CardBody >
+          <Form method="post" style={{height: "100%"}}>
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} flexDir={"column"} h={"90%"} >
+              <label hidden>Email</label>
+              <Input placeholder="Email..." mb={"3rem"} type="email" name="email"/>
+              <label hidden>Password</label>
+              <Input placeholder="Password..." mb={"3rem"} type="password" name="password"/>
+              <Button type={"submit"} w={"100%"}>Signup</Button>
+              <Text>Or</Text>
+              <Button leftIcon={<AiFillGithub />} type={"submit"} value={"github"} name="github" w={"100%"}>github</Button>
+            </Box>
           </Form>
         </CardBody>
       </Card>

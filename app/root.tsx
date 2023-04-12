@@ -43,6 +43,10 @@ export let links: LinksFunction = () => {
 }
 
 const theme = extendTheme({
+  shadows:{
+    white: "rgba(189, 195, 199, .3) 0px 18px 36px -18px inset, rgba(189, 195, 199, .1) 0px 8px 36px -8px inset, rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;",
+    purple: '0 0 0 3px rgba(159, 122, 234, 0.6)'
+  },
   colors: { 
     brandred: {
       900: '#ff0d47',

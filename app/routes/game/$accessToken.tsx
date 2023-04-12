@@ -116,7 +116,13 @@ export default function GameRoute() {
 
   return(
     <Box>
-        <Slide direction='top' in={isOpen} style={{ zIndex: 10 }}>
+        <Slide 
+          direction='top' 
+          in={isOpen} 
+          style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
+          
+          >
+            
           <Box
             w={"10rem"}
             p='40px'
@@ -125,6 +131,7 @@ export default function GameRoute() {
             bg='white'
             rounded='md'
             shadow='md'
+            
           >
             Correct!
           </Box>

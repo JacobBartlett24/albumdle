@@ -6,7 +6,12 @@ import { createClient } from "@supabase/supabase-js";
 import { supabase } from "~/utils/supabase.server"
 
 export async function createSearchResults(guess: string){
-  const { data, error } = await supabase.from('TopAlbumsGeneral').select().like('name', `%${guess}%`).limit(10)
+  // const { data, error } = await supabase.from('TopAlbumsGeneral').select().('name', `%${guess}%`).limit(10)
+  let { data, error } = await supabase
+  .rpc('fuzzysearch', {guess: `%${guess}%`})
+
+  if (error) console.error(error)
+
   return(data)
 }
 

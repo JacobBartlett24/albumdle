@@ -10,6 +10,7 @@ import SearchRecommendationDropdown from "~/components/SearchRecommendationDropd
 import Header from "~/components/Header";
 import { BsMoonStarsFill } from "react-icons/bs";
 import { AiTwotoneFire } from "react-icons/ai";
+import { supabase } from "~/utils/supabase.server";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -41,8 +42,12 @@ export async function loader({request}: LoaderArgs){
   const url = new URL(request.url);
   const guessValue: string = url.searchParams.get("guessValue")!;
   const albumId: number = +url.searchParams.get("albumId")!;
+
+  const { data, error } = await supabase.functions.invoke('hello-world', {
+    body: { name: 'Functions' },
+  })
+
   if(guessValue === album!.name){
-    console.log("correct")
   }
   return json({result: false, album: album, guessValue: guessValue});
 }
@@ -58,8 +63,6 @@ export async function action({request, params}: ActionArgs){
     },
   });
 
-  console.log(correctAlbum!.name)
-
   if(guessValue === correctAlbum!.name){
     return json({correct: true})
   }
@@ -73,7 +76,9 @@ export default function GameRoute() {
   let data = useLoaderData()
   const fetcher = useFetcher();
   const { isOpen, onToggle } = useDisclosure()
-
+  
+  
+  
   const { colorMode, toggleColorMode } = useColorMode()
 
   let randomAlbum: TopAlbumsGeneral = data.album;
@@ -121,9 +126,7 @@ export default function GameRoute() {
           direction='top' 
           in={isOpen} 
           style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
-          
           >
-            
           <Box
             p='40px'
             color='green'
@@ -131,9 +134,8 @@ export default function GameRoute() {
             bg='white'
             rounded='md'
             shadow='md'
-            
           >
-            <Text fontWeight={"extrabold"} fontSize="2rem">Correct!</Text>
+            <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
           </Box>
         </Slide>
       <Header 

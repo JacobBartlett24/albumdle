@@ -40,7 +40,7 @@ export async function action({request} : ActionArgs){
 export default function Login(){
   return(
     <Box>
-      <Card border={"1px solid black"} boxShadow={"2xl"} width={"30rem"} height={"35rem"} display={"flex"} justifyContent="center" alignItems={"center"} >
+      <Card bg={"brandwhite.900"} border={"1px solid black"} boxShadow={"white"} width={"30rem"} height={"35rem"} display={"flex"} justifyContent="center" alignItems={"center"} >
         <CardHeader >Login</CardHeader>
         <CardBody >
           <Form method="post" style={{height: "100%"}}>
@@ -51,7 +51,7 @@ export default function Login(){
               <Input placeholder="Password..." mb={"3rem"} type="password" name="password"/>
               <Button type={"submit"} w={"100%"}>Signup</Button>
               <Text>Or</Text>
-              <Button leftIcon={<AiFillGithub />} type={"submit"} value={"github"} name="github" w={"100%"}>github</Button>
+              <Button colorScheme={"blackAlpha"} leftIcon={<AiFillGithub />} type={"submit"} value={"github"} name="github" w={"100%"}>Github</Button>
             </Box>
           </Form>
         </CardBody>

@@ -12,7 +12,7 @@ import {
   useLoaderData,
 } from '@remix-run/react'
 import { MetaFunction, LinksFunction, LoaderFunction, LoaderArgs } from '@remix-run/node' // Depends on the runtime you choose
-
+import "./utils/fonts.css"
 import { ServerStyleContext, ClientStyleContext } from './context'
 
 
@@ -37,7 +37,7 @@ export let links: LinksFunction = () => {
     { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
     {
       rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap'
+      href: 'https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap'
     },
   ]
 }
@@ -50,7 +50,7 @@ const theme = extendTheme({
   colors: { 
     brandred: {
       900: '#ff0d47',
-      800: '#153e75',
+      800: '#153e75',   
       700: '#2a69ac',
     },
     brandyellow: {
@@ -68,8 +68,10 @@ const theme = extendTheme({
       800: '#153e75',
       700: '#2a69ac',
     },
-  },
   fonts: {
+    heading: `'Inter', sans-serif`,
+    body: `'Inter', sans-serif`,
+  },
   },
 })
 

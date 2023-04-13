@@ -4,7 +4,7 @@ import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
 import { BsMoonStarsFill } from 'react-icons/bs';
-
+import styles from '../utils/fonts.css';
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
@@ -35,13 +35,17 @@ export async function action({ request }: ActionArgs) {
   }    
 }
 
+export const links = () => {
+  return [{ rel: "stylesheet", href: styles }];
+};
+
 export default function Index() {
   const {colorMode, toggleColorMode} = useColorMode()
 
   return (
-    <Box display={"flex"} flexDir={"column"} alignItems={"center"}>
+    <Box fontFamily={"Inter"} display={"flex"} flexDir={"column"} alignItems={"center"}>
       <Header title='Albumdle' leftIcon={<Icon as={BsMoonStarsFill} boxSize={6} onClick={() => toggleColorMode()}/>} rightIcon={<Icon boxSize={6} as={BsMoonStarsFill}/>}/>
-      <Card w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
+      <Card boxShadow={"white"}w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>
           <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>
         </CardHeader>
@@ -49,11 +53,11 @@ export default function Index() {
           <Form method="post">
               <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
                 <Box>
-                  <Button color={"black"} bg={"brandgreen.900"}name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
-                  <Button color={"black"} bg={"brandgreen.900"}name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
+                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
+                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
                 </Box>
                 <Box>
-                  <Button color={"black"} bg={"brandgreen.900"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
+                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
                 </Box>
               </Box>
           </Form>

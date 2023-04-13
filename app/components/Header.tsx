@@ -1,5 +1,6 @@
 import { Box, Button, Heading, Icon, useColorMode } from "@chakra-ui/react";
 import { BsMoonStarsFill } from "react-icons/bs";
+import styles from '../utils/fonts.css';
 
 type props = {
   title: string,
@@ -7,13 +8,17 @@ type props = {
   rightIcon: any,
 }
 
+export const links = () => {
+  return [{ rel: "stylesheet", href: styles }];
+};
+
 export default function Header({title, leftIcon, rightIcon}: props){
   const { colorMode, toggleColorMode } = useColorMode()
-  return (
+  return(
     <Box color={colorMode === "light" ? "black" : "white"} p={"0 20px"} display={"flex"} flexDir={"row"} justifyContent={"space-between"} alignItems={"center"} h={"60px"} w={"100%"}>
       {leftIcon}
         {/* {colorMode === 'light' ? 'Dark' : 'Light'} */}
-      <Heading as="h1" size="xl" color={colorMode === "light" ? "black" : "white"} fontWeight="bold" textAlign="center">
+      <Heading fontFamily={"Inter"}  as="h1" size="xl" color={colorMode === "light" ? "black" : "white"} fontWeight="bold" textAlign="center">
         {title}
       </Heading>
       {rightIcon}

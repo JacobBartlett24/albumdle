@@ -3,7 +3,7 @@ import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { useActionData, useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral, DailyAlbum } from "@prisma/client";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, FormLabel, Heading, Icon, Input, keyframes, Slide, Spinner, StackDivider, Text, useColorMode, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, FormLabel, Heading, Icon, Input, keyframes, Slide, Spinner, StackDivider, Text, useColorMode, useDisclosure, useTimeout, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
@@ -146,7 +146,7 @@ export default function GameRoute() {
         rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
     <Box fontFamily={"Inter"}>
       
-        <Slide 
+        <Slide
           direction='top' 
           in={isOpen} 
           style={{ zIndex: 10, display: "flex", justifyContent: "center" }}

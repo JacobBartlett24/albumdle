@@ -213,7 +213,7 @@ export default function GameRoute() {
             <Box  display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.albumId} hidden/>
               <Box display={"flex"} flexDir={"column"}>
-                <Input bg={"blackAlpha.400"} boxShadow="white" w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
+                <Input bg={"blackAlpha.400"} boxShadow="white" w={"23rem"} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
                 {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
               <Button

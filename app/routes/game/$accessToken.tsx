@@ -37,7 +37,12 @@ export const links = () => {
 };
 
 export async function loader({request}: LoaderArgs){
-  let dailyAlbumId: DailyAlbum | null = await db.dailyAlbum.findFirst({});
+  let dailyAlbumId: DailyAlbum | null = await db.dailyAlbum.findFirst({
+    orderBy: {
+      created_at: "desc",
+    },
+  });
+
   let album: TopAlbumsGeneral | null = await db.topAlbumsGeneral.findUnique({
     where: {
       albumId: dailyAlbumId!.albumId,
@@ -205,13 +210,14 @@ export default function GameRoute() {
         <CardFooter display={"flex"} justifyContent={"center"}>
           <fetcher.Form method="post">
             <input type="hidden" name="guessNumber" value={guessNumber} />
-            <Box display={"flex"} flexDir={"row"}>
+            <Box  display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.albumId} hidden/>
               <Box display={"flex"} flexDir={"column"}>
-                <Input bg={"blackAlpha.400"} w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
+                <Input bg={"blackAlpha.400"} boxShadow="white" w={"23rem"} type="search" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
                 {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
               <Button
+                
                 colorScheme="gray" 
                 isDisabled={guess === "" || fetcher.data?.correct == true} 
                 hidden={guessNumber == 6 } 

@@ -31,7 +31,8 @@ model User {
 }
 
 model DailyAlbum {
-  id         Int              @id @default(autoincrement())
+  id         Int              @id @unique @default(autoincrement())
   albumId    String           @unique
   dailyAlbum TopAlbumsGeneral @relation(fields: [albumId], references: [albumId])
+  created_at DateTime?        @default(now()) @db.Timestamptz(6)
 }

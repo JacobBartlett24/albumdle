@@ -3,7 +3,7 @@ import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
-import { BsMoonStarsFill } from 'react-icons/bs';
+import { BsMoonFill, BsQuestionCircle } from 'react-icons/bs';
 import styles from '../utils/fonts.css';
 
 export async function action({ request }: ActionArgs) {
@@ -46,8 +46,8 @@ export default function Index() {
     <>
     <Header 
       title='Albumdle' 
-      leftIcon={<Icon as={BsMoonStarsFill} boxSize={6} onClick={() => toggleColorMode()}/>}
-      rightIcon={<Icon boxSize={6} as={BsMoonStarsFill}/>}/>
+      leftIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsMoonFill} boxSize={6} onClick={() => toggleColorMode()}/>}
+      rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle}/>}/>
     <Box h={"100%"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
       <Card boxShadow={"white"}w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>

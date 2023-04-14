@@ -150,24 +150,6 @@ export default function GameRoute() {
         leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
         rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
     <Box fontFamily={"Inter"}>
-      
-        <Slide
-          direction='top' 
-          in={isOpen} 
-          style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
-          >
-          <Box
-            p='40px'
-            color='green'
-            mt='4'
-            bg='white'
-            rounded='md'
-            shadow='md'
-          >
-            <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
-          </Box>
-        </Slide>
-
       <Card
         boxShadow="white" 
         color={colorMode === "light" ? "black" : "white"}
@@ -177,7 +159,7 @@ export default function GameRoute() {
         overflow={"visible"}
         >
         <CardHeader align={"center"}>
-          <Text>{obfuscate(randomAlbum.name!)}</Text>
+          <Text fontSize={"2xl"}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscate(randomAlbum.name!)}</Text>
         </CardHeader>
         <CardBody>
         <VStack
@@ -230,6 +212,22 @@ export default function GameRoute() {
           </fetcher.Form>
         </CardFooter>
       </Card>
+      <Slide
+          direction='bottom' 
+          in={isOpen} 
+          style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
+          >
+          <Box
+            p='40px'
+            color='green'
+            mt='4'
+            bg='white'
+            rounded='md'
+            shadow='md'
+          >
+            <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
+          </Box>
+        </Slide>
     </Box>
     </>
   )

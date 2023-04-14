@@ -4,6 +4,11 @@ import { redirect} from "@remix-run/node"
 import { Form } from "@remix-run/react"
 import { supabase } from "~/utils/supabase.server"
 import { AiFillGithub } from "react-icons/ai"
+import styles from "../../utils/fonts.css"
+
+export const links = () => {
+  return [{ rel: "stylesheet", href: styles }];
+};
 
 async function signInWithGitHub() {
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -39,9 +44,9 @@ export async function action({request} : ActionArgs){
 
 export default function Login(){
   return(
-    <Box>
-      <Card bg={"brandwhite.900"} border={"1px solid black"} boxShadow={"white"} width={"30rem"} height={"35rem"} display={"flex"} justifyContent="center" alignItems={"center"} >
-        <CardHeader >Login</CardHeader>
+    <Box fontFamily={"Inter"}>
+      <Card bg={"brandwhite.900"} border={"1px solid black"} boxShadow={"white"} width={["15rem","23rem","30rem"]} height={["23rem","26rem","35rem"]} display={"flex"} justifyContent="center" alignItems={"center"} >
+        <CardHeader fontSize={["xl","2xl","3xl"]}>Login</CardHeader>
         <CardBody >
           <Form method="post" style={{height: "100%"}}>
             <Box display={"flex"} alignItems={"center"} justifyContent={"center"} flexDir={"column"} h={"90%"} >

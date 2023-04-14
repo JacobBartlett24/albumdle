@@ -149,17 +149,17 @@ export default function GameRoute() {
         title={`Guess The Album Daily`} 
         leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
         rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
-    <Box fontFamily={"Inter"}>
+    <Box h={"100%"}fontFamily={"Inter"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
       <Card
         boxShadow="white" 
         color={colorMode === "light" ? "black" : "white"}
         bg={colorMode === "light" ? "white" : "black"} 
-        h={"40rem"} 
-        w={"60rem"}
+        h={["35rem","32rem","40rem"]} 
+        w={["20rem","32rem","40rem"]}
         overflow={"visible"}
         >
         <CardHeader align={"center"}>
-          <Text fontSize={"2xl"}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscate(randomAlbum.name!)}</Text>
+          <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscate(randomAlbum.name!)}</Text>
         </CardHeader>
         <CardBody>
         <VStack
@@ -167,23 +167,23 @@ export default function GameRoute() {
           spacing={4}
           align='stretch'
         >
-          <Box h={"3rem"} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"center"} justifyContent={"flex-end"} w={"13.4rem"}>First Track:</FormLabel>
             <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
-          <Box h={"3rem"} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Release Date:</FormLabel>
             <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
           </Box>
-          <Box h={"3rem"} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Second Track:</FormLabel> 
             <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
           </Box>
-          <Box h={"3rem"} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             <FormLabel m={"0 2rem 0 0"}>Recent Popularity (0-100):</FormLabel> 
             <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
           </Box>
-          <Box h={"3rem"} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
             <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Artist:</FormLabel> 
             <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
           </Box>
@@ -195,11 +195,11 @@ export default function GameRoute() {
             <Box  display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.albumId} hidden/>
               <Box display={"flex"} flexDir={"column"}>
-                <Input bg={"blackAlpha.400"} boxShadow="white" w={"23rem"} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
+                <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
                 {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>
               <Button
-                
+                h={["1.5rem","2rem","3rem"]}
                 colorScheme="gray" 
                 isDisabled={guess === "" || fetcher.data?.correct == true} 
                 hidden={guessNumber == 6 } 

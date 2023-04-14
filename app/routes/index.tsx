@@ -43,8 +43,12 @@ export default function Index() {
   const {colorMode, toggleColorMode} = useColorMode()
 
   return (
-    <Box fontFamily={"Inter"} display={"flex"} flexDir={"column"} alignItems={"center"}>
-      <Header title='Albumdle' leftIcon={<Icon as={BsMoonStarsFill} boxSize={6} onClick={() => toggleColorMode()}/>} rightIcon={<Icon boxSize={6} as={BsMoonStarsFill}/>}/>
+    <>
+    <Header 
+      title='Albumdle' 
+      leftIcon={<Icon as={BsMoonStarsFill} boxSize={6} onClick={() => toggleColorMode()}/>}
+      rightIcon={<Icon boxSize={6} as={BsMoonStarsFill}/>}/>
+    <Box h={"100%"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
       <Card boxShadow={"white"}w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
         <CardHeader>
           <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>
@@ -64,5 +68,6 @@ export default function Index() {
         </CardFooter>
       </Card>
     </Box>
+    </>
   );
 }

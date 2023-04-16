@@ -92,7 +92,8 @@ export default function GameRoute() {
   let randomAlbum: TopAlbumsGeneral = data.album;
   
   const [albumList, setAlbumList] = useState<TopAlbumsGeneral[]>([]);
-  const [guessNumber, setGuessNumber] = useState(0); 
+  const [guessNumber, setGuessNumber] = useState(0);
+  const [obfuscatedName, setObfuscatedName] = useState<string>(obfuscate(randomAlbum.name!, guessNumber));
   const [guess, setGuess] = useState<string>("");
 
   const shake = keyframes`
@@ -125,7 +126,13 @@ export default function GameRoute() {
     }
   }, [fetcher.data?.correct])
 
-  function obfuscate(albumName: string){
+  useEffect(() => {
+    if(guessNumber > 0){
+      setObfuscatedName(giveCharacter(randomAlbum.name!, guessNumber, obfuscatedName))
+    }
+  }, [guessNumber])
+
+  function obfuscate(albumName: string, guessNumber: number){
     let obfuscatedAlbumName: string = "";
     const regex = /\([^)]*\)/g;
     albumName = albumName.replace(regex, "");
@@ -133,10 +140,21 @@ export default function GameRoute() {
       if(albumName[i] === " "){
         obfuscatedAlbumName += "\xa0\xa0";
       } else {
-        obfuscatedAlbumName += " __";
+        obfuscatedAlbumName += "_";
       }
     }
+    obfuscatedAlbumName = giveCharacter(albumName, guessNumber, obfuscatedAlbumName)
+        
+
     return obfuscatedAlbumName;
+  }
+
+  function giveCharacter(albumName: string, guessNumber: number, obfuscatedAlbumName: string){
+    let randomNumber = Math.ceil(albumName.length * Math.random())
+    obfuscatedAlbumName = obfuscatedAlbumName.replace(/ /g, "")
+    obfuscatedAlbumName = obfuscatedAlbumName.substring(0, randomNumber) + albumName[randomNumber] + obfuscatedAlbumName.substring(randomNumber + 1)
+    obfuscatedAlbumName = obfuscatedAlbumName.split('').join(' ')
+    return obfuscatedAlbumName 
   }
 
   let submissionState = fetcher.state === "idle" ? "Guess" :
@@ -160,7 +178,7 @@ export default function GameRoute() {
         overflow={"visible"}
         >
         <CardHeader align={"center"}>
-          <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscate(randomAlbum.name!)}</Text>
+          <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscatedName}</Text>
         </CardHeader>
         <CardBody>
         <VStack

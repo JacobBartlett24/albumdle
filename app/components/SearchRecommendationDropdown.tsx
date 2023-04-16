@@ -14,12 +14,13 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
       <List 
         color={colorMode === "light" ? "black" : "white"}
         bg={colorMode === "light" ? "white" : "black"}
+        h={"10rem"}
         overflowY={"scroll"}
-        w={"23rem"}
-        top={"42.5rem"}
+        w={["13rem","20rem","23rem"]}
+        top={["1.5rem","2rem","3rem"]}
         borderRadius={"xl"}
         opacity={"100%"}
-        position={"fixed"}
+        position={"absolute"}
         spacing={0}
          hidden={guessNumber == 6}>
         {albumList.length > 0 ? albumList.map((album, i) => (
@@ -33,8 +34,8 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
               padding={"5px"}>
                 {album.name}
             </ListItem>
-            : null
-          )): null}
+            : ""
+          )): ""}
       </List>
     </>
   )

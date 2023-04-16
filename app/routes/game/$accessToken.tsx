@@ -150,7 +150,7 @@ export default function GameRoute() {
   }
 
   function giveCharacter(albumName: string, guessNumber: number, obfuscatedAlbumName: string){
-    let randomNumber = Math.ceil(albumName.length * Math.random())
+    let randomNumber = Math.ceil(albumName.length * Math.random()) - 1
     obfuscatedAlbumName = obfuscatedAlbumName.replace(/ /g, "")
     obfuscatedAlbumName = obfuscatedAlbumName.substring(0, randomNumber) + albumName[randomNumber] + obfuscatedAlbumName.substring(randomNumber + 1)
     obfuscatedAlbumName = obfuscatedAlbumName.split('').join(' ')
@@ -213,7 +213,7 @@ export default function GameRoute() {
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box  display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
-              <Box display={"flex"} flexDir={"column"}>
+              <Box pos={"relative"} display={"flex"} flexDir={"column"}>
                 <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
                 {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
               </Box>

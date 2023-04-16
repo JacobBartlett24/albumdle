@@ -44,30 +44,30 @@ export default function Index() {
 
   return (
     <>
-    <Header 
-      title='Albumdle' 
-      leftIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsMoonFill} boxSize={6} onClick={() => toggleColorMode()}/>}
-      rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle}/>}/>
-    <Box h={"100%"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
-      <Card boxShadow={"white"}w={"300px"} marginTop={"15rem"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
-        <CardHeader>
-          <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>
-        </CardHeader>
-        <CardFooter>
-          <Form method="post">
-              <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
-                <Box>
-                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
-                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
+      <Header 
+        title='Albumdle' 
+        leftIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsMoonFill} boxSize={6} onClick={() => toggleColorMode()}/>}
+        rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle}/>}/>
+      <Box h={"100vh"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
+        <Card boxShadow={"white"}w={"300px"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
+          <CardHeader>
+            <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>
+          </CardHeader>
+          <CardFooter>
+            <Form method="post">
+                <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
+                  <Box>
+                    <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
+                    <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
+                  </Box>
+                  <Box>
+                    <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
+                  </Box>
                 </Box>
-                <Box>
-                  <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
-                </Box>
-              </Box>
-          </Form>
-        </CardFooter>
-      </Card>
-    </Box>
+            </Form>
+          </CardFooter>
+        </Card>
+      </Box>
     </>
   );
 }

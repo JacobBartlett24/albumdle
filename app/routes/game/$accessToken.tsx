@@ -3,7 +3,7 @@ import type {ActionArgs, LoaderArgs} from "@remix-run/node";
 import { useActionData, useFetcher, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 import type { TopAlbumsGeneral, DailyAlbum } from "@prisma/client";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, FormLabel, Heading, Icon, Input, keyframes, Slide, Spinner, StackDivider, Text, useColorMode, useDisclosure, useTimeout, VStack } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, FormLabel, Heading, Icon, Input, keyframes, Slide, Spinner, StackDivider, Text, useColorMode, useDisclosure, useMediaQuery, useTimeout, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import SearchRecommendationDropdown from "~/components/SearchRecommendationDropdown";
@@ -82,6 +82,7 @@ export async function action({request, params}: ActionArgs){
 }
 
 export default function GameRoute() {
+  let mediaQuery = useMediaQuery("(prefers-color-scheme: dark)")
   let data = useLoaderData()
   const fetcher = useFetcher();
   const { isOpen, onToggle } = useDisclosure()
@@ -168,23 +169,23 @@ export default function GameRoute() {
           align='stretch'
         >
           <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"center"} justifyContent={"flex-end"} w={"13.4rem"}>First Track:</FormLabel>
+            <FormLabel hidden={guessNumber > 0} m={"0 2rem 0 0"} display={"flex"} alignContent={"center"} justifyContent={"flex-end"} w={"13.4rem"}>First Track:</FormLabel>
             <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
           </Box>
           <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Release Date:</FormLabel>
+            <FormLabel hidden={guessNumber > 1} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Release Date:</FormLabel>
             <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
           </Box>
           <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Second Track:</FormLabel> 
+            <FormLabel hidden={guessNumber > 2} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Second Track:</FormLabel> 
             <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
           </Box>
           <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel m={"0 2rem 0 0"}>Recent Popularity (0-100):</FormLabel> 
+            <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"}>Recent Popularity (0-100):</FormLabel> 
             <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
           </Box>
           <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Artist:</FormLabel> 
+            <FormLabel hidden={guessNumber > 4} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Artist:</FormLabel> 
             <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
           </Box>
         </VStack>
@@ -193,7 +194,7 @@ export default function GameRoute() {
           <fetcher.Form method="post">
             <input type="hidden" name="guessNumber" value={guessNumber} />
             <Box  display={"flex"} flexDir={"row"}>
-              <Input name="albumId" defaultValue={randomAlbum.albumId} hidden/>
+              <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
               <Box display={"flex"} flexDir={"column"}>
                 <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
                 {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}

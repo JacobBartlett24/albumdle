@@ -1,10 +1,11 @@
-import { Box, Text, Card, CardHeader, CardFooter, Button, Icon, useColorMode } from '@chakra-ui/react';
+import { Box, Text, Card, CardHeader, CardFooter, Button, Icon, useColorMode, useDisclosure, ModalBody, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
 import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
 import { BsMoonFill, BsQuestionCircle } from 'react-icons/bs';
 import styles from '../utils/fonts.css';
+import FAQModal from '~/components/FAQModal';
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
@@ -41,13 +42,28 @@ export const links = () => {
 
 export default function Index() {
   const {colorMode, toggleColorMode} = useColorMode()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  
 
   return (
     <>
       <Header 
         title='Albumdle' 
         leftIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsMoonFill} boxSize={6} onClick={() => toggleColorMode()}/>}
-        rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle}/>}/>
+        rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle} onClick={onOpen}/>}/>
+        <Modal isOpen={isOpen} onClose={onClose} size={"xl"} scrollBehavior={"inside"}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontSize={"3xl"}>FAQ</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody p={"10px"}>
+            <Text fontSize={"2xl"} fontWeight="bold">How do I play?</Text>
+            <Text>Albumdle is a game where you try to guess the album name based on hints given.</Text>
+            <Text fontSize={"2xl"} fontWeight="bold">Why create an account?</Text>
+            <Text>Creating an account lets you keep track of your streak!</Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Box h={"100vh"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
         <Card boxShadow={"white"}w={"300px"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
           <CardHeader>

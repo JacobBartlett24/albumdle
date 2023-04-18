@@ -15,7 +15,7 @@ import { MetaFunction, LinksFunction, LoaderFunction, LoaderArgs } from '@remix-
 import "./utils/fonts.css"
 import { ServerStyleContext, ClientStyleContext } from './context'
 import Image from '../public/firstTryPrompt.png'
-
+import PhoneImage from '../public/phoneGuitar.png'
 
 
 // Typescript
@@ -187,7 +187,7 @@ const Document = withEmotionCache(
 export default function App() {
   return (
     <Document>
-      <Box backgroundImage={Image} backgroundSize={"100vw 100vh"}>
+      <Box backgroundImage={[PhoneImage,Image]} backgroundSize={"100vw 100vh"}>
         <Outlet />
       </Box>
     </Document>

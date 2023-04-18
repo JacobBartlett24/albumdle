@@ -145,7 +145,6 @@ export default function GameRoute() {
     }
     obfuscatedAlbumName = giveCharacter(albumName, guessNumber, obfuscatedAlbumName)
         
-
     return obfuscatedAlbumName;
   }
 
@@ -177,41 +176,11 @@ export default function GameRoute() {
         w={["20rem","32rem","40rem"]}
         overflow={"visible"}
         >
-        <CardHeader align={"center"}>
+        <CardHeader display={"flex"} flexDir={"column"} alignItems={"center"}>
           <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscatedName}</Text>
-        </CardHeader>
-        <CardBody>
-        <VStack
-          divider={<StackDivider borderColor='gray.200' />}
-          spacing={4}
-          align='stretch'
-        >
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 0} m={"0 2rem 0 0"} display={"flex"} alignContent={"center"} justifyContent={"flex-end"} w={"13.4rem"}>First Track:</FormLabel>
-            <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 1} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Release Date:</FormLabel>
-            <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 2} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Second Track:</FormLabel> 
-            <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"}>Recent Popularity (0-100):</FormLabel> 
-            <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 4} m={"0 2rem 0 0"} display={"flex"} alignContent={"flex-end"} justifyContent={"flex-end"} w={"13.4rem"}>Artist:</FormLabel> 
-            <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
-          </Box>
-        </VStack>
-        </CardBody>
-        <CardFooter display={"flex"} justifyContent={"center"}>
           <fetcher.Form method="post">
             <input type="hidden" name="guessNumber" value={guessNumber} />
-            <Box  display={"flex"} flexDir={"row"}>
+            <Box m={"2rem 0"} display={"flex"} flexDir={"row"}>
               <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
               <Box pos={"relative"} display={"flex"} flexDir={"column"}>
                 <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
@@ -229,6 +198,62 @@ export default function GameRoute() {
               <Text hidden={guessNumber != 6}>You Suck!</Text>
             </Box>
           </fetcher.Form>
+        </CardHeader>
+        <CardBody>
+        <VStack
+          divider={<StackDivider borderColor='gray.200' />}
+          spacing={4}
+          align='stretch'
+        >
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel 
+              hidden={guessNumber > 0} 
+              m={"0 2rem 0 0"} 
+              display={"flex"} 
+              alignContent={"center"} 
+              justifyContent={"flex-end"} 
+              color={colorMode === "light" ? "gray" : "white"} 
+              textOverflow="ellipsis">First Track:</FormLabel>
+            <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
+          </Box>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel 
+              hidden={guessNumber > 1} 
+              m={"0 2rem 0 0"} 
+              display={"flex"} 
+              alignContent={"flex-end"} 
+              justifyContent={"flex-end"} 
+              color={colorMode === "light" ? "gray" : "white"}>Release Date:</FormLabel>
+            <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
+          </Box>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel 
+              hidden={guessNumber > 2} 
+              m={"0 2rem 0 0"} 
+              display={"flex"} 
+              alignContent={"flex-end"} 
+              justifyContent={"flex-end"} 
+              color={colorMode === "light" ? "gray" : "white"}>Second Track:</FormLabel> 
+            <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
+          </Box>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"} color={colorMode === "light" ? "gray" : "white"}>Recent Popularity (0-100):</FormLabel> 
+            <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
+          </Box>
+          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+            <FormLabel 
+              hidden={guessNumber > 4} 
+              m={"0 2rem 0 0"} 
+              display={"flex"} 
+              alignContent={"flex-end"} 
+              justifyContent={"flex-end"} 
+              color={colorMode === "light" ? "gray" : "white"} >Artist:</FormLabel> 
+            <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
+          </Box>
+        </VStack>
+        </CardBody>
+        <CardFooter display={"flex"} justifyContent={"center"}>
+          
         </CardFooter>
       </Card>
       <Slide
@@ -251,4 +276,3 @@ export default function GameRoute() {
     </>
   )
 } 
-//Let Me deploy rn pls

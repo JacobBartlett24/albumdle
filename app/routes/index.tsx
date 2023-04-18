@@ -64,7 +64,7 @@ export default function Index() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Box h={"100vh"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
+      <Box h={"calc(100vh - 60px)"} fontFamily={"Inter"} display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
         <Card boxShadow={"white"}w={"300px"} h={"20rem"} align={"center"} justifyContent={"space-evenly"} bg={"brandwhite.900"}>
           <CardHeader>
             <Text color={"black"} fontSize={"2rem"}>Welcome!</Text>

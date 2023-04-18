@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect, useMemo } from 'react'
 import { withEmotionCache } from '@emotion/react'
-import { ChakraProvider, cookieStorageManagerSSR, extendTheme } from '@chakra-ui/react'
+import { Box, ChakraProvider, cookieStorageManagerSSR, extendTheme } from '@chakra-ui/react'
 import {
   Links,
   LiveReload,
@@ -14,6 +14,7 @@ import {
 import { MetaFunction, LinksFunction, LoaderFunction, LoaderArgs } from '@remix-run/node' // Depends on the runtime you choose
 import "./utils/fonts.css"
 import { ServerStyleContext, ClientStyleContext } from './context'
+import Image from '../public/firstTryPrompt.png'
 
 
 
@@ -186,7 +187,9 @@ const Document = withEmotionCache(
 export default function App() {
   return (
     <Document>
+      <Box backgroundImage={Image} backgroundSize={"100vw 100vh"}>
         <Outlet />
+      </Box>
     </Document>
   )
 }

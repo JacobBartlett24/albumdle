@@ -2,9 +2,10 @@ import { Box, Text, Button, Card, CardBody, CardHeader, Input } from "@chakra-ui
 import type { ActionArgs } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
+import { createBrowserClient } from "@supabase/auth-helpers-remix";
 import { AiFillGithub } from "react-icons/ai";
-import { supabase } from "~/utils/supabase.server";
 import styles from "../../utils/fonts.css"
+
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
@@ -30,6 +31,10 @@ export async function action({request} : ActionArgs){
   }
 
   console.log(formData.get("github"))
+
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseSecretKey = process.env.SUPABASE_KEY
+  const supabase = createBrowserClient(supabaseUrl!, supabaseSecretKey!)
 
   const { data, error } = await supabase.auth.signUp({
     email: email,

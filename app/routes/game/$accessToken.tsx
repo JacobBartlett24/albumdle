@@ -12,6 +12,7 @@ import { BsMoonStarsFill } from "react-icons/bs";
 import { AiTwotoneFire } from "react-icons/ai";
 import { supabase } from "~/utils/supabase.server";
 import styles from "../../utils/fonts.css"
+import { createServerClient } from "@supabase/auth-helpers-remix";
 
 async function loadRandomAlbum(){
   let newSearchResults: Array<TopAlbumsGeneral> = await db.topAlbumsGeneral.findMany({
@@ -42,6 +43,15 @@ export async function loader({request}: LoaderArgs){
       created_at: "desc",
     },
   });
+  const response = new Response()
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseSecretKey = process.env.SUPABASE_KEY
+  const supabase = createServerClient(
+    supabaseUrl!,
+    supabaseSecretKey!,
+    { request, response })
+  
+  const {data} = await supabase.from('streaks').select('*')
 
   let album: TopAlbumsGeneral | null = await db.topAlbumsGeneral.findUnique({
     where: {
@@ -50,15 +60,17 @@ export async function loader({request}: LoaderArgs){
     });
   const url = new URL(request.url);
   const guessValue: string = url.searchParams.get("guessValue")!;
-  const albumId: number = +url.searchParams.get("albumId")!;
 
-  const { data, error } = await supabase.functions.invoke('hello-world', {
-    body: { name: 'Functions' },
-  })
-
-  if(guessValue === album!.name){
-  }
-  return json({result: false, album: album, guessValue: guessValue});
+  return json(
+    {
+    result: false,
+    album: album,
+    guessValue: guessValue,
+    data: data
+    }
+    ,{
+      headers: response.headers,
+    });
 }
 
 export async function action({request, params}: ActionArgs){
@@ -163,116 +175,117 @@ export default function GameRoute() {
 
   return(
     <>
-    <Header
-        title={`Guess The Album Daily`} 
-        leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
-        rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
-    <Box h={"100%"}fontFamily={"Inter"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      <Card
-        boxShadow="white" 
-        color={colorMode === "light" ? "black" : "white"}
-        bg={colorMode === "light" ? "white" : "black"} 
-        h={["35rem","32rem","40rem"]} 
-        w={["20rem","32rem","40rem"]}
-        overflow={"visible"}
-        >
-        <CardHeader display={"flex"} flexDir={"column"} alignItems={"center"}>
-          <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscatedName}</Text>
-          <fetcher.Form method="post">
-            <input type="hidden" name="guessNumber" value={guessNumber} />
-            <Box m={"2rem 0"} display={"flex"} flexDir={"row"}>
-              <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
-              <Box pos={"relative"} display={"flex"} flexDir={"column"}>
-                <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
-                {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
+      <div></div>
+      <Header
+          title={`Guess The Album Daily`} 
+          leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
+          rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
+      <Box h={"100%"}fontFamily={"Inter"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
+        <Card
+          boxShadow="white" 
+          color={colorMode === "light" ? "black" : "white"}
+          bg={colorMode === "light" ? "white" : "black"} 
+          h={["35rem","35rem","43rem"]} 
+          w={["20rem","32rem","43rem"]}
+          overflow={"visible"}
+          >
+          <CardHeader display={"flex"} flexDir={"column"} alignItems={"center"}>
+            <Text fontSize={["xl","2xl","3xl"]}>{guessNumber == 6 || fetcher.data?.correct ?  randomAlbum.name : obfuscatedName}</Text>
+            <fetcher.Form method="post">
+              <input type="hidden" name="guessNumber" value={guessNumber} />
+              <Box m={"2rem 0"} display={"flex"} flexDir={"row"}>
+                <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
+                <Box pos={"relative"} display={"flex"} flexDir={"column"}>
+                  <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
+                  {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
+                </Box>
+                <Button
+                  h={["1.5rem","2rem","3rem"]}
+                  colorScheme="gray" 
+                  isDisabled={guess === "" || fetcher.data?.correct == true} 
+                  hidden={guessNumber == 6 } 
+                  type="submit" 
+                  onClick={() => setGuessNumber(guessNumber + 1)}>
+                  {submissionState}
+                </Button>
+                <Text hidden={guessNumber != 6}>You Suck!</Text>
               </Box>
-              <Button
-                h={["1.5rem","2rem","3rem"]}
-                colorScheme="gray" 
-                isDisabled={guess === "" || fetcher.data?.correct == true} 
-                hidden={guessNumber == 6 } 
-                type="submit" 
-                onClick={() => setGuessNumber(guessNumber + 1)}>
-                {submissionState}
-              </Button>
-              <Text hidden={guessNumber != 6}>You Suck!</Text>
+            </fetcher.Form>
+          </CardHeader>
+          <CardBody>
+          <VStack
+            divider={<StackDivider borderColor='gray.200' />}
+            spacing={4}
+            align='stretch'
+          >
+            <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+              <FormLabel 
+                hidden={guessNumber > 0} 
+                m={"0 2rem 0 0"} 
+                display={"flex"} 
+                alignContent={"center"} 
+                justifyContent={"flex-end"} 
+                color={colorMode === "light" ? "gray" : "white"} 
+                textOverflow="ellipsis">First Track:</FormLabel>
+              <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
             </Box>
-          </fetcher.Form>
-        </CardHeader>
-        <CardBody>
-        <VStack
-          divider={<StackDivider borderColor='gray.200' />}
-          spacing={4}
-          align='stretch'
-        >
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel 
-              hidden={guessNumber > 0} 
-              m={"0 2rem 0 0"} 
-              display={"flex"} 
-              alignContent={"center"} 
-              justifyContent={"flex-end"} 
-              color={colorMode === "light" ? "gray" : "white"} 
-              textOverflow="ellipsis">First Track:</FormLabel>
-            <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel 
-              hidden={guessNumber > 1} 
-              m={"0 2rem 0 0"} 
-              display={"flex"} 
-              alignContent={"flex-end"} 
-              justifyContent={"flex-end"} 
-              color={colorMode === "light" ? "gray" : "white"}>Release Date:</FormLabel>
-            <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel 
-              hidden={guessNumber > 2} 
-              m={"0 2rem 0 0"} 
-              display={"flex"} 
-              alignContent={"flex-end"} 
-              justifyContent={"flex-end"} 
-              color={colorMode === "light" ? "gray" : "white"}>Second Track:</FormLabel> 
-            <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"} color={colorMode === "light" ? "gray" : "white"}>Recent Popularity (0-100):</FormLabel> 
-            <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
-          </Box>
-          <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
-            <FormLabel 
-              hidden={guessNumber > 4} 
-              m={"0 2rem 0 0"} 
-              display={"flex"} 
-              alignContent={"flex-end"} 
-              justifyContent={"flex-end"} 
-              color={colorMode === "light" ? "gray" : "white"} >Artist:</FormLabel> 
-            <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
-          </Box>
-        </VStack>
-        </CardBody>
-        <CardFooter display={"flex"} justifyContent={"center"}>
-          
-        </CardFooter>
-      </Card>
-      <Slide
-          direction='bottom' 
-          in={isOpen} 
-          style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
-          >
-          <Box
-            p='40px'
-            color='green'
-            mt='4'
-            bg='white'
-            rounded='md'
-            shadow='md'
-          >
-            <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
-          </Box>
-        </Slide>
-    </Box>
+            <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+              <FormLabel 
+                hidden={guessNumber > 1} 
+                m={"0 2rem 0 0"} 
+                display={"flex"} 
+                alignContent={"flex-end"} 
+                justifyContent={"flex-end"} 
+                color={colorMode === "light" ? "gray" : "white"}>Release Date:</FormLabel>
+              <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
+            </Box>
+            <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+              <FormLabel 
+                hidden={guessNumber > 2} 
+                m={"0 2rem 0 0"} 
+                display={"flex"} 
+                alignContent={"flex-end"} 
+                justifyContent={"flex-end"} 
+                color={colorMode === "light" ? "gray" : "white"}>Second Track:</FormLabel> 
+              <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
+            </Box>
+            <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+              <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"} color={colorMode === "light" ? "gray" : "white"}>Recent Popularity (0-100):</FormLabel> 
+              <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
+            </Box>
+            <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
+              <FormLabel 
+                hidden={guessNumber > 4} 
+                m={"0 2rem 0 0"} 
+                display={"flex"} 
+                alignContent={"flex-end"} 
+                justifyContent={"flex-end"} 
+                color={colorMode === "light" ? "gray" : "white"} >Artist:</FormLabel> 
+              <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
+            </Box>
+          </VStack>
+          </CardBody>
+          <CardFooter display={"flex"} justifyContent={"center"}>
+
+          </CardFooter>
+        </Card>
+        <Slide
+            direction='bottom' 
+            in={isOpen} 
+            style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
+            >
+            <Box
+              p='40px'
+              color='green'
+              mt='4'
+              bg='white'
+              rounded='md'
+              shadow='md'
+            >
+              <Text fontWeight={"extrabold"} fontSize="2rem">{guessNumber == 1 ? `Correct in ${guessNumber} guess!` : `Correct in ${guessNumber} guesses!`}</Text>
+            </Box>
+          </Slide>
+      </Box>
     </>
   )
 } 

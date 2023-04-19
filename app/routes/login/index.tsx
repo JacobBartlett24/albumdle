@@ -2,15 +2,17 @@ import { Box, Button, Card, CardBody, CardHeader, Icon, Input, Text } from "@cha
 import type { ActionArgs} from "@remix-run/node"
 import { redirect} from "@remix-run/node"
 import { Form } from "@remix-run/react"
-import { supabase } from "~/utils/supabase.server"
 import { AiFillGithub } from "react-icons/ai"
 import styles from "../../utils/fonts.css"
+import { createBrowserClient, createServerClient } from '@supabase/auth-helpers-remix'
+import type { SupabaseClient } from '@supabase/auth-helpers-remix'
+
 
 export const links = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
 
-async function signInWithGitHub() {
+async function signInWithGitHub(supabase: SupabaseClient<any, "public", any>) {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
   })
@@ -18,12 +20,21 @@ async function signInWithGitHub() {
 }
 
 export async function action({request} : ActionArgs){
+  const response = new Response() 
+
   const formData = await request.formData()
   const email = formData.get("email")!.toString()
   const password = formData.get("password")!.toString()
 
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseSecretKey = process.env.SUPABASE_KEY
+  const supabase = createServerClient(
+    supabaseUrl!,
+    supabaseSecretKey!,
+    { request, response })
+
   if(formData.get("github") === "github"){
-    let data = await signInWithGitHub()
+    let data = await signInWithGitHub(supabase)
     console.log(data.url)
     if(data.url){
       return redirect(data.url)
@@ -35,9 +46,18 @@ export async function action({request} : ActionArgs){
     password: password,
   })
 
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  const user = session?.user
+
+  console.log(user)
+  
   if(error){
     return redirect("/login")
   }else if(data){
+    
     return redirect("/game/123123")
   }
 }
@@ -54,7 +74,7 @@ export default function Login(){
               <Input placeholder="Email..." mb={"3rem"} type="email" name="email"/>
               <label hidden>Password</label>
               <Input placeholder="Password..." mb={"3rem"} type="password" name="password"/>
-              <Button type={"submit"} w={"100%"}>Signup</Button>
+              <Button type={"submit"} w={"100%"}>Login</Button>
               <Text>Or</Text>
               <Button colorScheme={"blackAlpha"} leftIcon={<AiFillGithub />} type={"submit"} value={"github"} name="github" w={"100%"}>Github</Button>
             </Box>

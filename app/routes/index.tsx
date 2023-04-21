@@ -72,10 +72,10 @@ export default function Index() {
           <CardFooter>
             <Form method="post">
                 <Box display={"flex"} flexDir={"column"} justifyContent={"center"} alignItems={"center"}>
-                  <Box>
+                  {/* <Box>
                     <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"signup"} type={"submit"} mr={".3rem"}>Signup</Button>
                     <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
-                  </Box>
+                  </Box> */}
                   <Box>
                     <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
                   </Box>

@@ -4,8 +4,8 @@ import styles from '../utils/fonts.css';
 
 type props = {
   title: string,
-  leftIcon: any,
-  rightIcon: any,
+  leftIcon?: any,
+  rightIcon?: any,
 }
 
 export const links = () => {

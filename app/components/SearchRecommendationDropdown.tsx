@@ -1,5 +1,6 @@
-import { ListItem, List, useColorMode } from "@chakra-ui/react"
+import { ListItem, List, useColorMode, Box } from "@chakra-ui/react"
 import type { TopAlbumsGeneral } from "@prisma/client"
+import { useState } from "react"
 
 type Props = {
   albumList: Array<TopAlbumsGeneral>,
@@ -9,15 +10,17 @@ type Props = {
 
 export default function SearchRecommendationDropdown({albumList, setGuess, guessNumber}: Props){
   const { colorMode, toggleColorMode } = useColorMode()
+  const [isFocused, setFocus] = useState(false)
   return(
-    <>
+    <Box position={"fixed"} left={"0"} onClick={() => setFocus(true)}  hidden={isFocused} top={"0"}  h={"100vh"} w={"100vw"}>
+
       <List 
         color={colorMode === "light" ? "black" : "white"}
         bg={colorMode === "light" ? "white" : "black"}
-        h={"10rem"}
         overflowY={"scroll"}
         w={["13rem","20rem","23rem"]}
-        top={["1.5rem","2rem","3rem"]}
+        left={"38vw"}
+        top={"32vh"}
         borderRadius={"xl"}
         opacity={"100%"}
         position={"absolute"}
@@ -30,13 +33,13 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
               borderBottom={"1px solid gray"} 
               _hover={{background: colorMode === "light" ? "black" : "white"  , cursor: "pointer", color: colorMode === "light" ? "white" : "black"}} 
               onClick={() => setGuess(album.name)} 
-              key={album.id} 
+              key={album.name} 
               padding={"5px"}>
                 {album.name}
             </ListItem>
             : ""
           )): ""}
       </List>
-    </>
+    </Box>
   )
 }

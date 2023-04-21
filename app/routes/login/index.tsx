@@ -20,46 +20,47 @@ async function signInWithGitHub(supabase: SupabaseClient<any, "public", any>) {
 }
 
 export async function action({request} : ActionArgs){
-  const response = new Response() 
+  // const response = new Response() 
 
-  const formData = await request.formData()
-  const email = formData.get("email")!.toString()
-  const password = formData.get("password")!.toString()
+  // const formData = await request.formData()
+  // const email = formData.get("email")!.toString()
+  // const password = formData.get("password")!.toString()
 
-  const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseSecretKey = process.env.SUPABASE_KEY
-  const supabase = createServerClient(
-    supabaseUrl!,
-    supabaseSecretKey!,
-    { request, response })
+  // const supabaseUrl = process.env.SUPABASE_URL
+  // const supabaseSecretKey = process.env.SUPABASE_KEY
+  // const supabase = createServerClient(
+  //   supabaseUrl!,
+  //   supabaseSecretKey!,
+  //   { request, response })
 
-  if(formData.get("github") === "github"){
-    let data = await signInWithGitHub(supabase)
-    console.log(data.url)
-    if(data.url){
-      return redirect(data.url)
-    }
-  }
+  // if(formData.get("github") === "github"){
+  //   let data = await signInWithGitHub(supabase)
+  //   console.log(data.url)
+  //   if(data.url){
+  //     return redirect(data.url)
+  //   }
+  // }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password,
-  })
+  // const { data, error } = await supabase.auth.signInWithPassword({
+  //   email: email,
+  //   password: password,
+  // })
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession()
 
-  const user = session?.user
+  // const user = session?.user
 
-  console.log(user)
+  // console.log(user)
   
-  if(error){
-    return redirect("/login")
-  }else if(data){
+  // if(error){
+  //   return redirect("/login")
+  // }else if(data){
     
-    return redirect("/game/123123")
-  }
+  //   return redirect("/game/123123")
+  // }
+  return Error;
 }
 
 export default function Login(){

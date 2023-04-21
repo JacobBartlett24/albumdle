@@ -61,6 +61,7 @@ export async function loader({request}: LoaderArgs){
   const url = new URL(request.url);
   const guessValue: string = url.searchParams.get("guessValue")!;
 
+
   return json(
     {
     result: false,
@@ -172,15 +173,13 @@ export default function GameRoute() {
                         fetcher.state === "loading" ? <Spinner /> :
                         fetcher.state === "submitting" ? <Spinner /> :
                         "Guess"
-
+  //leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}
+  //rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}
   return(
     <>
-      <div></div>
       <Header
-          title={`Guess The Album Daily`} 
-          leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}/>} 
-          rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}/>
-      <Box h={"100%"}fontFamily={"Inter"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
+          title={`Guess The Album Daily`} rightIcon={<Box></Box>} leftIcon={<Box></Box>} />
+      <Box h={"100%"}fontFamily={"Inter"} display={"flex"} alignItems={"center"} justifyContent={"center"} overflow={"hidden"}>
         <Card
           boxShadow="white" 
           color={colorMode === "light" ? "black" : "white"}

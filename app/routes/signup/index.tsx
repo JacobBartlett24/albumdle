@@ -49,6 +49,10 @@ export async function action({request} : ActionArgs){
   }
 }
 
+export function loader(){
+  return Error;
+}
+
 export default function SignupRoute() {
   let error = useActionData()
   return(

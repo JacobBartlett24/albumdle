@@ -1,11 +1,11 @@
-import { Box, Text, Card, CardHeader, CardFooter, Button, Icon, useColorMode, useDisclosure, ModalBody, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
+import { Box, Text, Card, CardHeader, CardFooter, Button, Icon, useColorMode, useDisclosure, ModalBody, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner } from '@chakra-ui/react';
 import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
 import { BsMoonFill, BsQuestionCircle } from 'react-icons/bs';
 import styles from '../utils/fonts.css';
-import FAQModal from '~/components/FAQModal';
+import { useNavigation } from "@remix-run/react";
 
 export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
@@ -26,6 +26,7 @@ export const links = () => {
 export default function Index() {
   const {colorMode, toggleColorMode} = useColorMode()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const navigation = useNavigation();
   
 
   return (
@@ -58,7 +59,8 @@ export default function Index() {
                     <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"login"} type={"submit"} ml={".3rem"}>Login</Button>
                   </Box> */}
                   <Box>
-                    <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>Continue As Guest</Button>
+                    <Button color={"black"} colorScheme={"blackAlpha"} name={"intent"} value={"guest"} type={"submit"} mt={"1rem"}>{navigation.state == "idle" ? "Continue As Guest" : <Spinner />}
+                    </Button>
                   </Box>
                 </Box>
             </Form>

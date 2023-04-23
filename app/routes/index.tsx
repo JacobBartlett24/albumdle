@@ -11,24 +11,7 @@ export async function action({ request }: ActionArgs) {
   const formData = await request.formData();
   const intent = formData.get('intent');
   if(intent === 'guest'){
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token?grant_type=client_credentials',
-      headers: {
-        'Authorization': 'Basic ' + (new Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')),
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      form:{
-        'grant_type': 'client_credentials'
-      },
-      json: true
-    };
-
-    var response = await fetch(authOptions.url, {
-      method: 'POST',
-      headers: authOptions.headers,
-    }).then(res => res.json());
-
-    return redirect(`/game/${response.access_token}`);
+    return redirect(`/game/`);
   }else if(intent === 'signup'){
     return redirect('/signup');
   }else if(intent === 'login'){
@@ -58,9 +41,7 @@ export default function Index() {
           <ModalCloseButton />
           <ModalBody p={"10px"}>
             <Text fontSize={"2xl"} fontWeight="bold">How do I play?</Text>
-            <Text>Albumdle is a game where you try to guess the album name based on hints given.</Text>
-            <Text fontSize={"2xl"} fontWeight="bold">Why create an account?</Text>
-            <Text>Creating an account lets you keep track of your streak!</Text>
+            <Text fontWeight={"medium"}>Albumdle is a game where you try to guess the album name based on hints given. You get 6 tries to get the correct album. The first guess is with no hints other than the obfuscated album name, after that you will be given a hint per guess.<br/></Text>
           </ModalBody>
         </ModalContent>
       </Modal>

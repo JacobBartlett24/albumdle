@@ -12,20 +12,21 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
   const { colorMode, toggleColorMode } = useColorMode()
   const [isFocused, setFocus] = useState(false)
   return(
+    <>
     <Box position={"fixed"} left={"0"} onClick={() => setFocus(true)}  hidden={isFocused} top={"0"}  h={"100vh"} w={"100vw"}>
-
+    </Box>
       <List 
         color={colorMode === "light" ? "black" : "white"}
         bg={colorMode === "light" ? "white" : "black"}
         overflowY={"scroll"}
         w={["13rem","20rem","23rem"]}
-        left={"38vw"}
-        top={"32vh"}
+        left={0}
+        top={["1.8rem","2.6rem","3.3rem"]}
         borderRadius={"xl"}
         opacity={"100%"}
         position={"absolute"}
         spacing={0}
-         hidden={guessNumber == 6}>
+        hidden={guessNumber == 6 || isFocused}>
         {albumList.length > 0 ? albumList.map((album, i) => (
             i += 1,
             i <= 7 ?
@@ -40,6 +41,6 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
             : ""
           )): ""}
       </List>
-    </Box>
+    </>
   )
 }

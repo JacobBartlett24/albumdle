@@ -99,6 +99,8 @@ export default function GameRoute() {
   let data = useLoaderData()
   const fetcher = useFetcher();
   const { isOpen, onToggle } = useDisclosure()
+  const [isFocused, setFocus] = useState(false)
+
   
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -108,22 +110,6 @@ export default function GameRoute() {
   const [guessNumber, setGuessNumber] = useState(0);
   const [obfuscatedName, setObfuscatedName] = useState<string>(obfuscate(randomAlbum.name!, guessNumber));
   const [guess, setGuess] = useState<string>("");
-
-  const shake = keyframes`
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    10% { transform: translate(-1px, -2px) rotate(-1deg); }
-    20% { transform: translate(-3px, 0px) rotate(1deg); }
-    30% { transform: translate(3px, 2px) rotate(0deg); }
-    40% { transform: translate(1px, -1px) rotate(1deg); }
-    50% { transform: translate(-1px, 2px) rotate(-1deg); }
-    60% { transform: translate(-3px, 1px) rotate(0deg); }
-    70% { transform: translate(3px, 1px) rotate(-1deg); }
-    80% { transform: translate(-1px, -1px) rotate(1deg); }
-    90% { transform: translate(1px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -2px) rotate(-1deg); }
-  `;
-
-  const shakeAnimation = `${shake} 0.5s`;
 
   async function handleChange(e: any){
     setGuess(e.target.value)
@@ -139,11 +125,11 @@ export default function GameRoute() {
     }
   }, [fetcher.data?.correct])
 
-  useEffect(() => {
-    if(guessNumber > 0){
-      setObfuscatedName(giveCharacter(randomAlbum.name!, guessNumber, obfuscatedName))
-    }
-  }, [guessNumber])
+  // useEffect(() => {
+  //   if(guessNumber > 0){
+  //     setObfuscatedName(giveCharacter(randomAlbum.name!, guessNumber, obfuscatedName))
+  //   }
+  // }, [guessNumber])
 
   function obfuscate(albumName: string, guessNumber: number){
     let obfuscatedAlbumName: string = "";
@@ -153,28 +139,27 @@ export default function GameRoute() {
       if(albumName[i] === " "){
         obfuscatedAlbumName += "\xa0\xa0";
       } else {
-        obfuscatedAlbumName += "_";
+        obfuscatedAlbumName += "_\xa0";
       }
     }
-    obfuscatedAlbumName = giveCharacter(albumName, guessNumber, obfuscatedAlbumName)
+    // obfuscatedAlbumName = giveCharacter(albumName, guessNumber, obfuscatedAlbumName)
         
     return obfuscatedAlbumName;
   }
 
-  function giveCharacter(albumName: string, guessNumber: number, obfuscatedAlbumName: string){
-    let randomNumber = Math.ceil(albumName.length * Math.random()) - 1
-    obfuscatedAlbumName = obfuscatedAlbumName.replace(/ /g, "")
-    obfuscatedAlbumName = obfuscatedAlbumName.substring(0, randomNumber) + albumName[randomNumber] + obfuscatedAlbumName.substring(randomNumber + 1)
-    obfuscatedAlbumName = obfuscatedAlbumName.split('').join(' ')
-    return obfuscatedAlbumName 
-  }
+  // function giveCharacter(albumName: string, guessNumber: number, obfuscatedAlbumName: string){
+  //   let randomNumber = Math.ceil(albumName.length * Math.random()) - 1
+  //   obfuscatedAlbumName = obfuscatedAlbumName.replace(/ /g, "")
+  //   obfuscatedAlbumName = obfuscatedAlbumName.substring(0, randomNumber) + albumName[randomNumber] + obfuscatedAlbumName.substring(randomNumber + 1)
+  //   obfuscatedAlbumName = obfuscatedAlbumName.split('').join(' ')
+  //   return obfuscatedAlbumName 
+  // }
 
   let submissionState = fetcher.state === "idle" ? "Guess" :
                         fetcher.state === "loading" ? <Spinner /> :
                         fetcher.state === "submitting" ? <Spinner /> :
                         "Guess"
-  //leftIcon={<Icon transition={"width .25s"} boxSize={6} as={BsMoonStarsFill} onClick={toggleColorMode} _hover={{cursor: "pointer", boxSize: "8"}}
-  //rightIcon={<Box display={"flex"} flexDir={"row"}><Text>1</Text><Icon transition={"width .25s"}  boxSize={6} as={AiTwotoneFire} _hover={{cursor: "pointer", boxSize: "8"}}/></Box>}
+
   return(
     <>
       <Header
@@ -195,8 +180,28 @@ export default function GameRoute() {
               <Box m={"2rem 0"} display={"flex"} flexDir={"row"}>
                 <Input name="albumId" defaultValue={randomAlbum.albumId!} hidden/>
                 <Box pos={"relative"} display={"flex"} flexDir={"column"}>
-                  <Input bg={"blackAlpha.400"} boxShadow="white" h={["1.5rem","2rem","3rem"]} w={["13rem","20rem","23rem"]} type="search" autoComplete="off" name="guessValue" value={guess} onChange={e => handleChange(e)} hidden={guessNumber == 6 || fetcher.data?.correct == true} required/>
-                  {guess == "" || fetcher.data?.correct == true ? null : <SearchRecommendationDropdown albumList={albumList} setGuess={setGuess} guessNumber={guessNumber}/>}
+                  
+                  <Input 
+                    bg={"blackAlpha.400"} 
+                    boxShadow="white" 
+                    h={["1.5rem","2rem","3rem"]} 
+                    w={["13rem","20rem","23rem"]} 
+                    type="search" 
+                    autoComplete="off" 
+                    name="guessValue" 
+                    value={guess}
+                    onFocus={() => setFocus(false)}
+                    onChange={e => handleChange(e)} 
+                    hidden={guessNumber == 6 || fetcher.data?.correct == true}
+                    required/>
+                      {guess == "" || fetcher.data?.correct == true ?
+                   null : 
+                   <SearchRecommendationDropdown 
+                    isFocused={isFocused} 
+                    setFocus={setFocus} 
+                    albumList={albumList} 
+                    setGuess={setGuess} 
+                    guessNumber={guessNumber}/>}
                 </Box>
                 <Button
                   h={["1.5rem","2rem","3rem"]}

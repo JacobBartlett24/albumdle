@@ -223,14 +223,15 @@ export default function GameRoute() {
           >
             <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
               <FormLabel 
+                isTruncated
                 hidden={guessNumber > 0} 
                 m={"0 2rem 0 0"} 
                 display={"flex"} 
                 alignContent={"center"} 
                 justifyContent={"flex-end"} 
                 color={colorMode === "light" ? "gray" : "white"} 
-                textOverflow="ellipsis">First Track:</FormLabel>
-              <Text hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
+                >First Track:</FormLabel>
+              <Text isTruncated hidden={guessNumber == 0}>{randomAlbum.tracks[0]}</Text>
             </Box>
             <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
               <FormLabel 
@@ -240,7 +241,7 @@ export default function GameRoute() {
                 alignContent={"flex-end"} 
                 justifyContent={"flex-end"} 
                 color={colorMode === "light" ? "gray" : "white"}>Release Date:</FormLabel>
-              <Text hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
+              <Text isTruncated  hidden={guessNumber <= 1}>{randomAlbum.release_date}</Text>
             </Box>
             <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
               <FormLabel 
@@ -250,11 +251,11 @@ export default function GameRoute() {
                 alignContent={"flex-end"} 
                 justifyContent={"flex-end"} 
                 color={colorMode === "light" ? "gray" : "white"}>Second Track:</FormLabel> 
-              <Text hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
+              <Text isTruncated hidden={guessNumber <= 2}>{randomAlbum.tracks[1]}</Text>
             </Box>
             <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
               <FormLabel hidden={guessNumber > 3} m={"0 2rem 0 0"} color={colorMode === "light" ? "gray" : "white"}>Recent Popularity (0-100):</FormLabel> 
-              <Text hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
+              <Text isTruncated hidden={guessNumber <= 3}>{randomAlbum.popularity}</Text>
             </Box>
             <Box h={["1.5rem","2rem","3rem"]} boxShadow="white" bg={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.300"} borderRadius={"lg"} display={"flex"} flexDir={"row"} alignItems={"center"} pl={"1rem"}>
               <FormLabel 
@@ -264,7 +265,7 @@ export default function GameRoute() {
                 alignContent={"flex-end"} 
                 justifyContent={"flex-end"} 
                 color={colorMode === "light" ? "gray" : "white"} >Artist:</FormLabel> 
-              <Text hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
+              <Text isTruncated hidden={guessNumber <= 4}>{randomAlbum.artists[0].name}</Text>
             </Box>
           </VStack>
           </CardBody>

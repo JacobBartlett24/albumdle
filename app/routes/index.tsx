@@ -3,7 +3,7 @@ import type { ActionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
 import { redirect } from 'react-router';
 import Header from '~/components/Header';
-import { BsMoonFill, BsQuestionCircle } from 'react-icons/bs';
+import { BsGithub, BsMoonFill, BsQuestionCircle } from 'react-icons/bs';
 import styles from '../utils/fonts.css';
 import { useNavigation } from "@remix-run/react";
 
@@ -33,7 +33,7 @@ export default function Index() {
     <>
       <Header 
         title='Albumdle' 
-        leftIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsMoonFill} boxSize={6} onClick={() => toggleColorMode()}/>}
+        leftIcon={<a href='https://github.com/JacobBartlett24'><Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} as={BsGithub} boxSize={6} /></a>}
         rightIcon={<Icon _hover={{boxShadow: "white"}} borderRadius={"50%"} boxSize={6} as={BsQuestionCircle} onClick={onOpen}/>}/>
         <Modal isOpen={isOpen} onClose={onClose} size={"xl"} scrollBehavior={"inside"}>
         <ModalOverlay />
@@ -42,7 +42,14 @@ export default function Index() {
           <ModalCloseButton />
           <ModalBody p={"10px"}>
             <Text fontSize={"2xl"} fontWeight="bold">How do I play?</Text>
-            <Text fontWeight={"medium"}>Albumdle is a game where you try to guess the album name based on hints given. You get 6 tries to get the correct album. The first guess is with no hints other than the obfuscated album name, after that you will be given a hint per guess.<br/></Text>
+            <Text fontWeight={"medium"}>Albumdle is a game where you try to guess the album name based on hints given.
+             You get 6 tries to get the correct album. The first guess is with no hints other than the obfuscated album name,
+              after that you will be given a hint per guess.<br/></Text>
+            <Text fontSize={"2xl"} fontWeight="bold">Is this the whole game?</Text>
+            <Text fontWeight={"medium"}>It depends! If it gains some traction I plan on adding some extra features such as different
+            genres, endless mode, and stuff of that nature.<br/></Text>
+            <Text fontSize={"2xl"} fontWeight="bold">Contact me</Text>
+            <Text fontWeight={"medium"}>If there's any bugs or you just want to connect, send me an email at <Text fontWeight="bold">albumdleapp@gmail.com</Text><br/></Text>
           </ModalBody>
         </ModalContent>
       </Modal>

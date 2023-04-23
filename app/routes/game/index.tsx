@@ -61,7 +61,6 @@ export async function loader({request}: LoaderArgs){
   const url = new URL(request.url);
   const guessValue: string = url.searchParams.get("guessValue")!;
 
-
   return json(
     {
     result: false,
@@ -190,7 +189,7 @@ export default function GameRoute() {
                     autoComplete="off" 
                     name="guessValue" 
                     value={guess}
-                    onFocus={() => setFocus(false)}
+                    onFocus={() => setFocus(true)}
                     onChange={e => handleChange(e)} 
                     hidden={guessNumber == 6 || fetcher.data?.correct == true}
                     required/>
@@ -212,7 +211,7 @@ export default function GameRoute() {
                   onClick={() => setGuessNumber(guessNumber + 1)}>
                   {submissionState}
                 </Button>
-                <Text hidden={guessNumber != 6}>You Suck!</Text>
+                <Text hidden={guessNumber != 6}>Bummer, maybe next time! 😜</Text>
               </Box>
             </fetcher.Form>
           </CardHeader>
@@ -275,7 +274,7 @@ export default function GameRoute() {
         </Card>
         <Slide
             direction='bottom' 
-            in={isOpen} 
+            in={isOpen}
             style={{ zIndex: 10, display: "flex", justifyContent: "center" }}
             >
             <Box

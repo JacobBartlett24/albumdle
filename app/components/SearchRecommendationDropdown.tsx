@@ -6,14 +6,15 @@ type Props = {
   albumList: Array<TopAlbumsGeneral>,
   setGuess: Function,
   guessNumber: number,
+  isFocused: boolean,
+  setFocus: Function
 }
 
-export default function SearchRecommendationDropdown({albumList, setGuess, guessNumber}: Props){
+export default function SearchRecommendationDropdown({albumList, setGuess, guessNumber, isFocused, setFocus}: Props){
   const { colorMode, toggleColorMode } = useColorMode()
-  const [isFocused, setFocus] = useState(false)
   return(
     <>
-    <Box position={"fixed"} left={"0"} onClick={() => setFocus(true)}  hidden={isFocused} top={"0"}  h={"100vh"} w={"100vw"}>
+    <Box position={"fixed"} left={"0"} onClick={() => setFocus(false)}  hidden={!isFocused} top={"0"}  h={"100vh"} w={"100vw"}>
     </Box>
       <List 
         color={colorMode === "light" ? "black" : "white"}
@@ -26,7 +27,7 @@ export default function SearchRecommendationDropdown({albumList, setGuess, guess
         opacity={"100%"}
         position={"absolute"}
         spacing={0}
-        hidden={guessNumber == 6 || isFocused}>
+        hidden={guessNumber == 6 || !isFocused}>
         {albumList.length > 0 ? albumList.map((album, i) => (
             i += 1,
             i <= 7 ?

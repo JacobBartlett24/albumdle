@@ -1,4 +1,5 @@
 import { Box, Button, Heading, Icon, useColorMode } from "@chakra-ui/react";
+import { Link } from "@remix-run/react";
 import { BsMoonStarsFill } from "react-icons/bs";
 import styles from '../utils/fonts.css';
 
@@ -19,7 +20,7 @@ export default function Header({title, leftIcon, rightIcon}: props){
       {leftIcon}
         {/* {colorMode === 'light' ? 'Dark' : 'Light'} */}
       <Heading fontFamily={"Inter"}  as="h1" size="xl" color={colorMode === "light" ? "black" : "white"} fontWeight="bold" textAlign="center">
-        {title}
+        <Link prefetch="intent" to="/">{title}</Link>
       </Heading>
       {rightIcon}
       {/* Toggle {colorMode === 'light' ? 'Dark' : 'Light'} */}

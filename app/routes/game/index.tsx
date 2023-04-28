@@ -99,7 +99,6 @@ export default function GameRoute() {
   const fetcher = useFetcher();
   const { isOpen, onToggle } = useDisclosure()
   const [isFocused, setFocus] = useState(false)
-
   
   const { colorMode, toggleColorMode } = useColorMode()
 
@@ -117,6 +116,10 @@ export default function GameRoute() {
 
     setAlbumList(response);
   }
+
+  useEffect(() => {
+    setGuess("")
+  },[data])
 
   useEffect(() => {
     if(fetcher.data?.correct){
@@ -152,12 +155,14 @@ export default function GameRoute() {
   //   obfuscatedAlbumName = obfuscatedAlbumName.substring(0, randomNumber) + albumName[randomNumber] + obfuscatedAlbumName.substring(randomNumber + 1)
   //   obfuscatedAlbumName = obfuscatedAlbumName.split('').join(' ')
   //   return obfuscatedAlbumName 
-  // }
+  // }  
 
   let submissionState = fetcher.state === "idle" ? "Guess" :
                         fetcher.state === "loading" ? <Spinner /> :
                         fetcher.state === "submitting" ? <Spinner /> :
                         "Guess"
+
+  
 
   return(
     <>
